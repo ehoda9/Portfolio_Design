@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mahmoud Mohamed — Front-End Dev, UE5 Blueprints & AI Data Work</title>
+<meta name="description" content="Mahmoud Mohamed. Front-end development, Unreal Engine 5 Blueprint systems, AI model evaluation & data annotation, and workflow automation.">
+<meta name="author" content="Mahmoud Mohamed">
+<meta property="og:title" content="Mahmoud Mohamed — Dev / UE5 / AI Data">
+<meta property="og:description" content="Front-end builds, UE5 Blueprint systems, AI evaluation & data annotation, n8n automation.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B0D13">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="wrap site-header__inner">
+    <a href="#top" class="site-header__logo" id="logo">MM<span class="site-header__logo-dot">.</span></a>
+
+    <ul class="site-header__nav">
+      <li><a href="#services" class="site-header__nav-link" data-section="services">Services</a></li>
+      <li><a href="#work" class="site-header__nav-link" data-section="work">Work</a></li>
+      <li><a href="#skills" class="site-header__nav-link" data-section="skills">Skills</a></li>
+      <li><a href="#about" class="site-header__nav-link" data-section="about">About</a></li>
+      <li><a href="#faq" class="site-header__nav-link" data-section="faq">FAQ</a></li>
+    </ul>
+
+    <div class="site-header__actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
+        <span class="theme-toggle__thumb" id="theme-toggle-thumb">🌙</span>
+      </button>
+      <a href="#contact" class="btn btn--primary site-header__cta">Get in touch</a>
+      <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#services" class="mobile-nav__link">Services</a>
+  <a href="#work" class="mobile-nav__link">Work</a>
+  <a href="#skills" class="mobile-nav__link">Skills</a>
+  <a href="#about" class="mobile-nav__link">About</a>
+  <a href="#faq" class="mobile-nav__link">FAQ</a>
+  <a href="#contact" class="mobile-nav__link mobile-nav__link--cta">Get in touch</a>
+</div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero" aria-label="Intro">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <div class="hero__orb hero__orb--gold" aria-hidden="true"></div>
+    <div class="hero__orb hero__orb--cyan" aria-hidden="true"></div>
+
+    <div class="wrap hero__inner">
+      <div class="hero__eyebrow fade-up">
+        <span class="status-pill">Open for freelance work</span>
+        <span class="badge badge--gold">Egypt · Remote</span>
+      </div>
+
+      <h1 class="hero__title fade-up" style="--delay:.06s">
+        <span class="hero__title-line">I build things at the edge of</span>
+        <span class="hero__title-line hero__title-line--accent">code, game systems &amp; AI data.</span>
+      </h1>
+
+      <p class="hero__desc fade-up" style="--delay:.12s">
+        Front-end developer and AI data specialist. I build web interfaces, Unreal Engine 5
+        Blueprint systems, and structured evaluation &amp; automation workflows for teams that
+        need work done properly the first time.
+      </p>
+
+      <div class="hero__actions fade-up" style="--delay:.18s">
+        <a href="#contact" class="btn btn--primary btn--large">Start a project →</a>
+        <a href="#work" class="btn btn--secondary btn--large">See my work</a>
+      </div>
+
+      <div class="hero__tags fade-up" style="--delay:.24s">
+        <span class="hero__tag">Front-End Dev</span>
+        <span class="hero__tag">UE5 Blueprints</span>
+        <span class="hero__tag">AI Evaluation &amp; Annotation</span>
+        <span class="hero__tag">n8n Automation</span>
+        <span class="hero__tag">EN ↔ AR</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- SERVICES -->
+  <section class="section" id="services" aria-label="Services">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">What I do</span>
+      <h2 class="section__title fade-up">Five skill sets, one standard of finish</h2>
+      <p class="section__subtitle fade-up">I've spent years teaching myself across these areas — each one still gets the same attention to detail.</p>
+
+      <div class="service-grid">
+        <article class="service-card fade-up">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 3 12l5 8M16 4l5 8-5 8M13.5 3l-3 18"/></svg>
+          </div>
+          <h3 class="service-card__title">Front-End Development</h3>
+          <p class="service-card__desc">Responsive, production-ready web builds — landing pages, dashboards, and interactive tools, built to actually ship.</p>
+          <div class="service-card__tags">
+            <span class="service-card__tag">HTML / CSS</span>
+            <span class="service-card__tag">JavaScript / TS</span>
+            <span class="service-card__tag">Node.js</span>
+            <span class="service-card__tag">PHP</span>
+          </div>
+        </article>
+
+        <article class="service-card fade-up" style="--delay:.05s">
+          <div class="service-card__icon service-card__icon--cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="11" rx="3"/><path d="M8 12h.01M6 14v-4M4 12h4M15 11.5h.01M18 13.5h.01"/></svg>
+          </div>
+          <h3 class="service-card__title">UE5 Blueprint Systems</h3>
+          <p class="service-card__desc">Gameplay mechanics and reusable systems built entirely in Blueprints — including a commercial cover system asset published on Fab.</p>
+          <div class="service-card__tags">
+            <span class="service-card__tag">Unreal Engine 5</span>
+            <span class="service-card__tag">Blueprints</span>
+            <span class="service-card__tag">Gameplay Systems</span>
+          </div>
+          <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="service-card__link">View on Fab →</a>
+        </article>
+
+        <article class="service-card fade-up" style="--delay:.10s">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          </div>
+          <h3 class="service-card__title">AI Evaluation &amp; Data Annotation</h3>
+          <p class="service-card__desc">Structured model-comparison rubrics, error taxonomies, and rationale writing for AI research and training-data pipelines.</p>
+          <div class="service-card__tags">
+            <span class="service-card__tag">Prompt Evaluation</span>
+            <span class="service-card__tag">Rubric Design</span>
+            <span class="service-card__tag">Data Annotation</span>
+          </div>
+        </article>
+
+        <article class="service-card fade-up" style="--delay:.15s">
+          <div class="service-card__icon service-card__icon--cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M9 3l1.5 3.7L14 6M15 21l-1.5-3.7L10 18"/></svg>
+          </div>
+          <h3 class="service-card__title">Workflow Automation</h3>
+          <p class="service-card__desc">n8n automations that remove repetitive manual work — from data syncing to notification pipelines.</p>
+          <div class="service-card__tags">
+            <span class="service-card__tag">n8n</span>
+            <span class="service-card__tag">API Integrations</span>
+            <span class="service-card__tag">Process Design</span>
+          </div>
+        </article>
+
+        <article class="service-card fade-up" style="--delay:.20s">
+          <div class="service-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          </div>
+          <h3 class="service-card__title">EN ↔ AR Language Support</h3>
+          <p class="service-card__desc">Bilingual content review and dialect-aware Arabic quality checks, built from real annotation work on conversational AI.</p>
+          <div class="service-card__tags">
+            <span class="service-card__tag">Egyptian Arabic</span>
+            <span class="service-card__tag">Localization QA</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- WORK -->
+  <section class="section" id="work" aria-label="Selected work">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">Selected work</span>
+      <h2 class="section__title fade-up">A few things I've shipped</h2>
+
+      <div class="portfolio__filters fade-up">
+        <button class="portfolio__filter-btn portfolio__filter-btn--active" data-filter="all">All</button>
+        <button class="portfolio__filter-btn" data-filter="web">Web</button>
+        <button class="portfolio__filter-btn" data-filter="game">UE5</button>
+        <button class="portfolio__filter-btn" data-filter="automation">Automation</button>
+      </div>
+
+      <div class="portfolio__grid">
+        <article class="portfolio__item" data-category="web">
+          <div class="portfolio__card">
+            <div class="portfolio__thumb portfolio__thumb--1"></div>
+            <div class="portfolio__overlay">
+              <span class="portfolio__category">Web App</span>
+              <h3 class="portfolio__title">MissionCoach</h3>
+              <p class="portfolio__subtitle">Personal productivity &amp; finance tracker with a gold-investment ledger and weekly financial anchoring.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio__item" data-category="game">
+          <div class="portfolio__card">
+            <div class="portfolio__thumb portfolio__thumb--2"></div>
+            <div class="portfolio__overlay">
+              <span class="portfolio__category">UE5 Blueprint Asset</span>
+              <h3 class="portfolio__title">Cover System</h3>
+              <p class="portfolio__subtitle">Commercial Blueprint asset published on Fab — dynamic line tracing and performance-optimized cover detection.</p>
+              <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="portfolio__link">View on Fab →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio__item" data-category="web">
+          <div class="portfolio__card">
+            <div class="portfolio__thumb portfolio__thumb--3"></div>
+            <div class="portfolio__overlay">
+              <span class="portfolio__category">Web App</span>
+              <h3 class="portfolio__title">Earnings Tracker</h3>
+              <p class="portfolio__subtitle">Mobile-first income tracker with dual USD / EGP display for freelance work.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio__item" data-category="automation">
+          <div class="portfolio__card">
+            <div class="portfolio__thumb portfolio__thumb--4"></div>
+            <div class="portfolio__overlay">
+              <span class="portfolio__category">Reference Guide</span>
+              <h3 class="portfolio__title">n8n Arabic Node Reference</h3>
+              <p class="portfolio__subtitle">A full Arabic-language reference for n8n nodes, built to help Arabic-speaking freelancers get into automation faster.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="portfolio__item" data-category="web">
+          <div class="portfolio__card">
+            <div class="portfolio__thumb portfolio__thumb--5"></div>
+            <div class="portfolio__overlay">
+              <span class="portfolio__category">Web App</span>
+              <h3 class="portfolio__title">RTL Fitness Calendar</h3>
+              <p class="portfolio__subtitle">Right-to-left Arabic training calendar for planning and logging workouts.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ABOUT -->
+  <section class="section" id="about" aria-label="About">
+    <div class="wrap about__layout">
+      <div class="about__side fade-up">
+        <img class="about__photo" src="assets/img/mahmoud-mohamed.jpg" alt="Mahmoud Mohamed">
+        <div class="about__card">
+          <span class="about__card-label">Based in</span>
+          <span class="about__card-value">Egypt</span>
+          <span class="about__card-label">Working</span>
+          <span class="about__card-value">Remote, international clients</span>
+          <span class="about__card-label">Currently</span>
+          <span class="about__card-value">AI &amp; Data Science diploma</span>
+          <span class="about__card-label">Connect</span>
+          <div class="about__card-links">
+            <a href="https://github.com/ehoda9" target="_blank" rel="noopener" class="about__card-link">GitHub</a>
+            <a href="https://www.linkedin.com/in/mahmoud-mohamed3/" target="_blank" rel="noopener" class="about__card-link">LinkedIn</a>
+            <a href="tel:+201068811625" class="about__card-link">+20 106 881 1625</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="about__main fade-up" style="--delay:.06s">
+        <span class="section__eyebrow">About</span>
+        <h2 class="section__title">Self-taught, and still building</h2>
+        <p class="about__text">
+          I'm a self-taught developer from Egypt. I started in front-end web development,
+          picked up IT support and workflow automation along the way, and built a commercial
+          Unreal Engine 5 Blueprint asset almost entirely by trial and error. More recently
+          I've been doing AI model evaluation and data annotation work — writing structured
+          rubrics, error taxonomies, and comparison rationale for teams training language models.
+        </p>
+        <p class="about__text">
+          I'm currently a few months into an AI &amp; Data Science diploma covering Python,
+          machine learning, deep learning, NLP, and LLMs — closing the gap between the practical
+          annotation work I already do and the engineering side of AI.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills" aria-label="Skills">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">Toolbox</span>
+      <h2 class="section__title fade-up">What I actually use</h2>
+
+      <div class="skills__groups">
+        <div class="skills__group fade-up">
+          <span class="skills__group-label">Front-End</span>
+          <div class="skills__tag-list">
+            <span class="skills__tag">HTML5</span>
+            <span class="skills__tag">CSS3</span>
+            <span class="skills__tag skills__tag--core">JavaScript</span>
+            <span class="skills__tag">TypeScript</span>
+            <span class="skills__tag">Node.js</span>
+            <span class="skills__tag">PHP</span>
+          </div>
+        </div>
+
+        <div class="skills__group fade-up" style="--delay:.05s">
+          <span class="skills__group-label">Game Dev</span>
+          <div class="skills__tag-list">
+            <span class="skills__tag skills__tag--core">UE5 Blueprints</span>
+            <span class="skills__tag">Gameplay Systems</span>
+            <span class="skills__tag">Fab Marketplace</span>
+          </div>
+        </div>
+
+        <div class="skills__group fade-up" style="--delay:.10s">
+          <span class="skills__group-label">AI &amp; Data</span>
+          <div class="skills__tag-list">
+            <span class="skills__tag skills__tag--core">Model Evaluation</span>
+            <span class="skills__tag">Rubric Design</span>
+            <span class="skills__tag">Data Annotation</span>
+            <span class="skills__tag">Python (in progress)</span>
+          </div>
+        </div>
+
+        <div class="skills__group fade-up" style="--delay:.15s">
+          <span class="skills__group-label">Automation</span>
+          <div class="skills__tag-list">
+            <span class="skills__tag skills__tag--core">n8n</span>
+            <span class="skills__tag">API Integrations</span>
+            <span class="skills__tag">IT Support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- PROCESS -->
+  <section class="section" id="process" aria-label="How I work">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">How it works</span>
+      <h2 class="section__title fade-up">From brief to delivery</h2>
+
+      <ol class="process__list">
+        <li class="process__step fade-up">
+          <span class="process__step-index">01</span>
+          <h3 class="process__step-title">Brief &amp; scope</h3>
+          <p class="process__step-desc">We talk through what you need, timeline, and budget before anything starts.</p>
+        </li>
+        <li class="process__step fade-up" style="--delay:.05s">
+          <span class="process__step-index">02</span>
+          <h3 class="process__step-title">Plan &amp; quote</h3>
+          <p class="process__step-desc">You get a clear breakdown of deliverables and a fixed quote — no surprises later.</p>
+        </li>
+        <li class="process__step fade-up" style="--delay:.10s">
+          <span class="process__step-index">03</span>
+          <h3 class="process__step-title">Build &amp; check-ins</h3>
+          <p class="process__step-desc">Regular progress updates so you're never wondering where things stand.</p>
+        </li>
+        <li class="process__step fade-up" style="--delay:.15s">
+          <span class="process__step-index">04</span>
+          <h3 class="process__step-title">Review &amp; handover</h3>
+          <p class="process__step-desc">Revisions, final delivery, and a short handover so you can run with it.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" aria-label="FAQ">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">FAQ</span>
+      <h2 class="section__title fade-up">Common questions</h2>
+
+      <div class="faq__list">
+        <div class="faq__item">
+          <button class="faq__question" aria-expanded="false">
+            What's your typical turnaround time?
+            <span class="faq__icon">+</span>
+          </button>
+          <div class="faq__answer">
+            <p>Depends on scope — a landing page might take a few days, a full UE5 system or automation build usually takes one to three weeks. I'll give you a real estimate after the brief call.</p>
+          </div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__question" aria-expanded="false">
+            Do you work with clients outside Egypt?
+            <span class="faq__icon">+</span>
+          </button>
+          <div class="faq__answer">
+            <p>Yes, all of my work is remote. I'm comfortable coordinating across time zones and communicating in English.</p>
+          </div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__question" aria-expanded="false">
+            What languages do you work in?
+            <span class="faq__icon">+</span>
+          </button>
+          <div class="faq__answer">
+            <p>English professionally, Egyptian Arabic natively — useful for projects that need EN↔AR review or dialect-aware content work.</p>
+          </div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__question" aria-expanded="false">
+            Can you sign an NDA?
+            <span class="faq__icon">+</span>
+          </button>
+          <div class="faq__answer">
+            <p>Yes. Some of my AI annotation work is already under confidentiality agreements, so I'm used to working within NDA terms.</p>
+          </div>
+        </div>
+        <div class="faq__item">
+          <button class="faq__question" aria-expanded="false">
+            How do revisions work?
+            <span class="faq__icon">+</span>
+          </button>
+          <div class="faq__answer">
+            <p>Every project includes a round of revisions after delivery. Anything beyond scope creep is quoted separately, agreed before I start.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact" aria-label="Contact">
+    <div class="wrap contact__layout">
+      <div class="contact__intro fade-up">
+        <span class="section__eyebrow">Get in touch</span>
+        <h2 class="section__title">Tell me about your project</h2>
+        <p class="section__subtitle">Fill in the form, or reach out directly — I usually reply within a day.</p>
+        <div class="contact__direct">
+          <a href="tel:+201068811625" class="contact__direct-link">+20 106 881 1625</a>
+          <a href="https://github.com/ehoda9" target="_blank" rel="noopener" class="contact__direct-link">github.com/ehoda9</a>
+          <a href="https://www.linkedin.com/in/mahmoud-mohamed3/" target="_blank" rel="noopener" class="contact__direct-link">LinkedIn</a>
+        </div>
+      </div>
+
+      <form class="contact-form fade-up" id="contact-form" style="--delay:.06s">
+        <div class="contact-form__row">
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-name">Name</label>
+            <input class="contact-form__input" type="text" id="cf-name" placeholder="Your name">
+          </div>
+          <div class="contact-form__field">
+            <label class="contact-form__label" for="cf-email">Email</label>
+            <input class="contact-form__input" type="email" id="cf-email" placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="contact-form__field">
+          <label class="contact-form__label" for="cf-service">Service</label>
+          <select class="contact-form__input" id="cf-service">
+            <option value="">Select a service</option>
+            <option value="frontend">Front-End Development</option>
+            <option value="ue5">UE5 Blueprint Systems</option>
+            <option value="ai-eval">AI Evaluation &amp; Data Annotation</option>
+            <option value="automation">Workflow Automation</option>
+            <option value="translation">EN ↔ AR Language Support</option>
+          </select>
+        </div>
+        <div class="contact-form__field">
+          <label class="contact-form__label" for="cf-desc">Project details</label>
+          <textarea class="contact-form__input contact-form__input--area" id="cf-desc" rows="5" placeholder="What are you trying to build?"></textarea>
+        </div>
+        <p class="contact-form__message contact-form__message--error" id="cf-error">Please fill in your name, email, and project details.</p>
+        <p class="contact-form__message contact-form__message--success" id="cf-success">Thanks — your message is in. I'll get back to you soon.</p>
+        <button type="button" class="btn btn--primary btn--large contact-form__submit" id="cf-submit">Send message →</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div>
+      <a href="#top" class="site-header__logo">MM<span class="site-header__logo-dot">.</span></a>
+      <p class="site-footer__tag">Front-end dev, UE5 Blueprints &amp; AI data work.</p>
+    </div>
+    <ul class="site-footer__links">
+      <li><a href="#services" class="site-footer__link">Services</a></li>
+      <li><a href="#work" class="site-footer__link">Work</a></li>
+      <li><a href="#about" class="site-footer__link">About</a></li>
+      <li><a href="#contact" class="site-footer__link">Contact</a></li>
+    </ul>
+    <ul class="site-footer__links">
+      <li><a href="https://github.com/ehoda9" target="_blank" rel="noopener" class="site-footer__link">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/mahmoud-mohamed3/" target="_blank" rel="noopener" class="site-footer__link">LinkedIn</a></li>
+      <li><a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="site-footer__link">Fab</a></li>
+      <li><a href="tel:+201068811625" class="site-footer__link">+20 106 881 1625</a></li>
+    </ul>
+  </div>
+  <div class="wrap">
+    <p class="site-footer__copy">© <span id="footer-year"></span> Mahmoud Mohamed. Built by hand.</p>
+  </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>

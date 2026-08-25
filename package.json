@@ -1,0 +1,13 @@
+{
+  "name": "mahmoud-mohamed-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal portfolio — front-end dev, UE5 Blueprint systems & AI evaluation/data annotation.",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

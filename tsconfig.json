@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ES2019", "DOM"],
+    "module": "none",
+    "ignoreDeprecations": "6.0",
+    "strict": true,
+    "noImplicitAny": true,
+    "outDir": "js",
+    "rootDir": "src",
+    "sourceMap": false,
+    "removeComments": true
+  },
+  "include": ["src/**/*.ts"]
+}
