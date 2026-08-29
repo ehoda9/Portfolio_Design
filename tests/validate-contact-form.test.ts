@@ -29,4 +29,16 @@ describe('validateContactForm', () => {
   it('accepts emails with subdomains and plus-addressing', () => {
     expect(validateContactForm({ name: 'Mahmoud', email: 'mahmoud+work@mail.example.co', desc: 'details' })).toBe(true);
   });
+
+  it('rejects a name longer than 500 characters', () => {
+    expect(validateContactForm({ name: 'a'.repeat(501), email: 'a@b.com', desc: 'details' })).toBe(false);
+  });
+
+  it('rejects a project description longer than 500 characters', () => {
+    expect(validateContactForm({ name: 'Mahmoud', email: 'a@b.com', desc: 'a'.repeat(501) })).toBe(false);
+  });
+
+  it('accepts a description right at the 500 character limit', () => {
+    expect(validateContactForm({ name: 'Mahmoud', email: 'a@b.com', desc: 'a'.repeat(500) })).toBe(true);
+  });
 });
