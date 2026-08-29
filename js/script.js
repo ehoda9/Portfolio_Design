@@ -1,4 +1,7 @@
-"use strict";
+import { validateContactForm } from './lib/validate-contact-form.js';
+import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
+import { toggleFaqItem } from './lib/faq.js';
+import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 const themeToggle = document.getElementById('theme-toggle');
 const themeThumb = document.getElementById('theme-toggle-thumb');
 const root = document.documentElement;
@@ -9,18 +12,9 @@ themeToggle.addEventListener('click', () => {
 });
 const menuBtn = document.getElementById('menu-btn');
 const mobileNav = document.getElementById('mobile-nav');
-function closeMobileNav() {
-    mobileNav.classList.remove('is-open');
-    menuBtn.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-}
-menuBtn.addEventListener('click', () => {
-    const isOpen = mobileNav.classList.toggle('is-open');
-    menuBtn.setAttribute('aria-expanded', String(isOpen));
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-});
+menuBtn.addEventListener('click', () => toggleMobileNav(mobileNav, menuBtn));
 mobileNav.querySelectorAll('.mobile-nav__link').forEach(link => {
-    link.addEventListener('click', closeMobileNav);
+    link.addEventListener('click', () => closeMobileNav(mobileNav, menuBtn));
 });
 const header = document.getElementById('site-header');
 const navLinks = document.querySelectorAll('.site-header__nav-link');
@@ -50,29 +44,19 @@ const filterButtons = document.querySelectorAll('.portfolio__filter-btn');
 const portfolioItems = document.querySelectorAll('.portfolio__item');
 filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
+        var _a;
         filterButtons.forEach(b => b.classList.remove('portfolio__filter-btn--active'));
         btn.classList.add('portfolio__filter-btn--active');
-        const filter = btn.dataset.filter;
+        const filter = (_a = btn.dataset.filter) !== null && _a !== void 0 ? _a : 'all';
         portfolioItems.forEach(item => {
-            const show = filter === 'all' || item.dataset.category === filter;
-            item.hidden = !show;
+            item.hidden = !shouldShowPortfolioItem(filter, item.dataset.category);
         });
     });
 });
-document.querySelectorAll('.faq__item').forEach(item => {
+const faqItems = Array.from(document.querySelectorAll('.faq__item'));
+faqItems.forEach(item => {
     const question = item.querySelector('.faq__question');
-    question.addEventListener('click', () => {
-        const isOpen = item.classList.contains('faq__item--open');
-        document.querySelectorAll('.faq__item').forEach(i => {
-            var _a;
-            i.classList.remove('faq__item--open');
-            (_a = i.querySelector('.faq__question')) === null || _a === void 0 ? void 0 : _a.setAttribute('aria-expanded', 'false');
-        });
-        if (!isOpen) {
-            item.classList.add('faq__item--open');
-            question.setAttribute('aria-expanded', 'true');
-        }
-    });
+    question.addEventListener('click', () => toggleFaqItem(faqItems, item));
 });
 const form = document.getElementById('contact-form');
 const errorMsg = document.getElementById('cf-error');
@@ -81,11 +65,10 @@ const submitBtn = document.getElementById('cf-submit');
 submitBtn.addEventListener('click', () => {
     errorMsg.classList.remove('is-visible');
     successMsg.classList.remove('is-visible');
-    const name = document.getElementById('cf-name').value.trim();
-    const email = document.getElementById('cf-email').value.trim();
-    const desc = document.getElementById('cf-desc').value.trim();
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!name || !email || !desc || !emailRe.test(email)) {
+    const name = document.getElementById('cf-name').value;
+    const email = document.getElementById('cf-email').value;
+    const desc = document.getElementById('cf-desc').value;
+    if (!validateContactForm({ name, email, desc })) {
         errorMsg.classList.add('is-visible');
         return;
     }

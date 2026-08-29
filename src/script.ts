@@ -1,3 +1,8 @@
+import { validateContactForm } from './lib/validate-contact-form.js';
+import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
+import { toggleFaqItem } from './lib/faq.js';
+import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
+
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
 const themeThumb = document.getElementById('theme-toggle-thumb') as HTMLSpanElement;
@@ -13,20 +18,10 @@ themeToggle.addEventListener('click', () => {
 const menuBtn = document.getElementById('menu-btn') as HTMLButtonElement;
 const mobileNav = document.getElementById('mobile-nav') as HTMLDivElement;
 
-function closeMobileNav(): void {
-  mobileNav.classList.remove('is-open');
-  menuBtn.setAttribute('aria-expanded', 'false');
-  document.body.style.overflow = '';
-}
-
-menuBtn.addEventListener('click', () => {
-  const isOpen = mobileNav.classList.toggle('is-open');
-  menuBtn.setAttribute('aria-expanded', String(isOpen));
-  document.body.style.overflow = isOpen ? 'hidden' : '';
-});
+menuBtn.addEventListener('click', () => toggleMobileNav(mobileNav, menuBtn));
 
 mobileNav.querySelectorAll<HTMLAnchorElement>('.mobile-nav__link').forEach(link => {
-  link.addEventListener('click', closeMobileNav);
+  link.addEventListener('click', () => closeMobileNav(mobileNav, menuBtn));
 });
 
 // Header state + active nav link on scroll
@@ -68,28 +63,19 @@ filterButtons.forEach(btn => {
     filterButtons.forEach(b => b.classList.remove('portfolio__filter-btn--active'));
     btn.classList.add('portfolio__filter-btn--active');
 
-    const filter = btn.dataset.filter;
+    const filter = btn.dataset.filter ?? 'all';
     portfolioItems.forEach(item => {
-      const show = filter === 'all' || item.dataset.category === filter;
-      item.hidden = !show;
+      item.hidden = !shouldShowPortfolioItem(filter, item.dataset.category);
     });
   });
 });
 
 // FAQ accordion
-document.querySelectorAll<HTMLElement>('.faq__item').forEach(item => {
+const faqItems = Array.from(document.querySelectorAll<HTMLElement>('.faq__item'));
+
+faqItems.forEach(item => {
   const question = item.querySelector('.faq__question') as HTMLButtonElement;
-  question.addEventListener('click', () => {
-    const isOpen = item.classList.contains('faq__item--open');
-    document.querySelectorAll('.faq__item').forEach(i => {
-      i.classList.remove('faq__item--open');
-      i.querySelector('.faq__question')?.setAttribute('aria-expanded', 'false');
-    });
-    if (!isOpen) {
-      item.classList.add('faq__item--open');
-      question.setAttribute('aria-expanded', 'true');
-    }
-  });
+  question.addEventListener('click', () => toggleFaqItem(faqItems, item));
 });
 
 // Contact form
@@ -102,17 +88,19 @@ submitBtn.addEventListener('click', () => {
   errorMsg.classList.remove('is-visible');
   successMsg.classList.remove('is-visible');
 
-  const name = (document.getElementById('cf-name') as HTMLInputElement).value.trim();
-  const email = (document.getElementById('cf-email') as HTMLInputElement).value.trim();
-  const desc = (document.getElementById('cf-desc') as HTMLTextAreaElement).value.trim();
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const name = (document.getElementById('cf-name') as HTMLInputElement).value;
+  const email = (document.getElementById('cf-email') as HTMLInputElement).value;
+  const desc = (document.getElementById('cf-desc') as HTMLTextAreaElement).value;
 
-  if (!name || !email || !desc || !emailRe.test(email)) {
+  if (!validateContactForm({ name, email, desc })) {
     errorMsg.classList.add('is-visible');
     return;
   }
 
-  // Replace this block with a real submission call (Formspree, EmailJS, your own backend, etc.)
+  // NOTE: this simulates a submission. To wire it to a real backend, POST
+  // { name, email, desc } to your endpoint of choice (Formspree, EmailJS,
+  // your own API route) here and only call the success branch once that
+  // request resolves. See README → "Contact form integration".
   submitBtn.textContent = 'Sending…';
   setTimeout(() => {
     successMsg.classList.add('is-visible');
