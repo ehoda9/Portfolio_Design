@@ -130,6 +130,14 @@ npm test          # run once
 npm run coverage    # run with coverage + enforce thresholds
 ```
 
+## Backend
+
+This site is growing a real backend (blog + contact form persistence) in
+[`server/`](./server/README.md) — see [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+for the design and build phases. It's being built incrementally and
+doesn't affect anything in this README above; the frontend still runs
+standalone with no backend required.
+
 ## Contact form integration
 
 The contact form (`#contact-form`) currently **simulates** a submission —
