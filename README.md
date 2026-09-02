@@ -1,9 +1,11 @@
 # Mahmoud Mohamed — Portfolio
 
-**Project type:** static front-end portfolio site (HTML, CSS, TypeScript).
-No backend, no server-rendered routes, no infrastructure-as-code — the
-`Dockerfile` here exists only to run the build/test suite in isolation
-(see [Testing](#testing)), not to deploy anything.
+**Project classification:** this is a static front-end site (HTML, CSS,
+TypeScript) plus a small Express/PostgreSQL backend under `server/` for
+the blog and contact form. There is **no infrastructure-as-code** here —
+no Terraform, Kubernetes, or Helm — the `Dockerfile` and
+`docker-compose.yml` exist only to run tests in isolation and to serve
+the site locally, not to provision infrastructure.
 
 Personal portfolio site. Front-end development, Unreal Engine 5 Blueprint
 systems, AI model evaluation & data annotation, and workflow automation.
@@ -87,9 +89,14 @@ static file server.
 docker compose up
 ```
 
-Opens the site at `http://localhost:8080`. There's a single `web` service
-(nginx serving the static files) — no database or other backing service is
-needed, since there's nothing else to bring up.
+Brings up three services together:
+- `web` — nginx serving this static site at `http://localhost:8080`
+- `api` — the Express backend ([`server/`](./server/README.md)) at
+  `http://localhost:3000`, migrating its own database on startup
+- `db` — PostgreSQL, with a named volume so data survives restarts
+
+`curl http://localhost:3000/api/health` once it's up to confirm the API
+is live.
 
 ## Development
 
