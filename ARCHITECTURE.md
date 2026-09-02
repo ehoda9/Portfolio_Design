@@ -1,0 +1,99 @@
+# Architecture
+
+## Overview
+
+Two independently deployable services:
+
+1. **Frontend** (repo root) — static HTML/CSS/TypeScript portfolio site.
+   Unchanged by this work; documented in `README.md`.
+2. **Backend API** (`server/`) — Express + TypeScript REST API backing the
+   blog and the contact form, persisting to PostgreSQL.
+
+## Why these choices
+
+- **Express** — matches the plain, dependency-light style already used in
+  the frontend (no heavy framework), and stays easy to reason about for a
+  small number of routes.
+- **PostgreSQL** — the data is genuinely relational (posts, contact
+  messages, unique slugs) and benefits from real constraints, which fits
+  an RDBMS better than a document store. It's also the most common
+  production choice for exactly this kind of app.
+- **A separate service, not merged into one framework (e.g. Next.js)** —
+  keeps the already-shipped, tested static frontend untouched, and keeps
+  the two concerns (marketing site vs. content API) independently
+  deployable and testable.
+
+## Planned schema
+
+Introduced incrementally in Phase 2 — this is the target design, not yet
+implemented.
+
+### `posts`
+
+| column | type | notes |
+|---|---|---|
+| id | serial primary key | |
+| slug | text unique not null | URL-safe identifier |
+| title | text not null | |
+| excerpt | text not null | shown in the blog list |
+| content | text not null | Markdown |
+| status | text not null default `'draft'` | `'draft'` \| `'published'` |
+| published_at | timestamptz | null until published |
+| created_at | timestamptz not null default now() | |
+| updated_at | timestamptz not null default now() | |
+
+### `contact_messages`
+
+| column | type | notes |
+|---|---|---|
+| id | serial primary key | |
+| name | text not null | |
+| email | text not null | |
+| message | text not null | |
+| created_at | timestamptz not null default now() | |
+
+## Planned API surface
+
+Introduced incrementally — the **Phase** column is when each row lands.
+
+| Method | Path | Auth | Phase |
+|---|---|---|---|
+| GET | `/api/health` | — | 1 |
+| GET | `/api/posts` | public | 3 |
+| GET | `/api/posts/:slug` | public | 3 |
+| POST | `/api/posts` | admin | 3 |
+| PUT | `/api/posts/:id` | admin | 3 |
+| DELETE | `/api/posts/:id` | admin | 3 |
+| POST | `/api/auth/login` | — | 4 |
+| POST | `/api/contact` | public | 5 |
+
+## Auth approach
+
+Single-admin model — there's exactly one author. Credentials are an email
++ a bcrypt password hash stored in environment variables, never in the
+database or source control. `POST /api/auth/login` verifies the password
+against the hash and returns a short-lived JWT; write endpoints require a
+valid `Authorization: Bearer <token>` header. No user table, no signup
+flow — deliberately minimal for a single-author blog.
+
+## Local development
+
+`docker-compose.yml` brings the API and a Postgres instance up together
+(this arrives in Phase 2 onward, once the API actually needs a database —
+no point adding a `db` service before anything talks to it).
+
+## Status
+
+This is a living document. Each phase below updates it if the design
+changes along the way.
+
+- [x] Phase 0 — this document
+- [x] Phase 1 — backend skeleton + `/api/health`
+- [ ] Phase 2 — database + migrations
+- [ ] Phase 3 — blog CRUD API
+- [ ] Phase 4 — admin auth
+- [ ] Phase 5 — contact form → real backend
+- [ ] Phase 6 — frontend blog pages
+- [ ] Phase 7 — admin UI
+- [ ] Phase 8 — full docker-compose (web + api + db)
+- [ ] Phase 9 — final docs
