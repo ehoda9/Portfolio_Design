@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,3 +37,35 @@ jobs:
 
       - name: Coverage
         run: npm run coverage
+
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency audit
+        run: npm audit --audit-level=high
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build (TypeScript)
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
