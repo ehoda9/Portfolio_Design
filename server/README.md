@@ -4,9 +4,9 @@ Backend for [Mahmoud Mohamed's portfolio](../README.md) — the blog and
 contact form persist here. See [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 for the overall design, schema, and phased build plan.
 
-**Status:** Phase 3 — public blog read API is live and backed by a real
-Postgres database. Write endpoints (create/edit/delete posts) land in
-Phase 4, together with admin auth — never separately.
+**Status:** Phase 4 — admin auth and protected write endpoints are live,
+with rate limiting on login (brute-force protection) and across the API
+(abuse ceiling). The blog API is now fully functional end-to-end.
 
 ## Endpoints (so far)
 
@@ -15,6 +15,37 @@ Phase 4, together with admin auth — never separately.
 | GET | `/api/health` | — |
 | GET | `/api/posts` | public — published posts only, newest first, no `content` field |
 | GET | `/api/posts/:slug` | public — 404 if missing or not published |
+| POST | `/api/auth/login` | — (rate-limited: 10/15min per IP) |
+| POST | `/api/posts` | admin |
+| PUT | `/api/posts/:id` | admin |
+| DELETE | `/api/posts/:id` | admin |
+
+## Admin setup
+
+You need three environment variables (see `.env.example`):
+
+```bash
+# 1. Generate a password hash — never write the plaintext password anywhere else
+npm run hash-password -- 'your-real-password'
+# paste the output into ADMIN_PASSWORD_HASH
+
+# 2. Generate a random JWT secret
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+# paste the output into JWT_SECRET
+
+# 3. Set ADMIN_EMAIL to whatever email you'll log in with
+```
+
+Then log in:
+
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","password":"your-real-password"}'
+```
+
+Use the returned `token` as `Authorization: Bearer <token>` on the
+`POST`/`PUT`/`DELETE /api/posts` endpoints.
 
 ## Database
 

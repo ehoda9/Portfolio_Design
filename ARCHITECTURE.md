@@ -76,6 +76,23 @@ against the hash and returns a short-lived JWT; write endpoints require a
 valid `Authorization: Bearer <token>` header. No user table, no signup
 flow — deliberately minimal for a single-author blog.
 
+## Rate limiting
+
+Two limiters (`express-rate-limit`), sized for what this app actually is
+— a single-author portfolio site, not a high-traffic service:
+
+- **Login** (`/api/auth/login`): 10 attempts per IP per 15 minutes. This
+  is the endpoint someone would brute-force a password against, so it's
+  deliberately tight.
+- **General API** (`/api/*`): 300 requests per IP per 15 minutes. Not
+  meant to shape real traffic — it's a ceiling against scraping,
+  accidental retry loops, or a flood of pointless requests, without
+  affecting a real visitor browsing the blog.
+
+No caching layer, connection pool tuning, or horizontal-scaling setup —
+none of that is a real problem at this traffic scale, and adding it now
+would be complexity with nothing to justify it.
+
 ## Local development
 
 `docker-compose.yml` brings the API and a Postgres instance up together
@@ -91,7 +108,7 @@ changes along the way.
 - [x] Phase 1 — backend skeleton + `/api/health`
 - [x] Phase 2 — database + migrations (`posts`, `contact_messages`, real Postgres in CI and docker-compose)
 - [x] Phase 3 — public blog read API (`GET /api/posts`, `GET /api/posts/:slug`)
-- [ ] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`) — **merged together**: a write endpoint is never committed without its auth guard already in place, so these ship as one phase instead of two
+- [x] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`), plus rate limiting (login brute-force protection + a general API ceiling)
 - [ ] Phase 5 — contact form → real backend
 - [ ] Phase 6 — frontend blog pages
 - [ ] Phase 7 — admin UI
