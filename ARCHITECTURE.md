@@ -61,9 +61,9 @@ Introduced incrementally — the **Phase** column is when each row lands.
 | GET | `/api/health` | — | 1 |
 | GET | `/api/posts` | public | 3 |
 | GET | `/api/posts/:slug` | public | 3 |
-| POST | `/api/posts` | admin | 3 |
-| PUT | `/api/posts/:id` | admin | 3 |
-| DELETE | `/api/posts/:id` | admin | 3 |
+| POST | `/api/posts` | admin | 4 |
+| PUT | `/api/posts/:id` | admin | 4 |
+| DELETE | `/api/posts/:id` | admin | 4 |
 | POST | `/api/auth/login` | — | 4 |
 | POST | `/api/contact` | public | 5 |
 
@@ -90,8 +90,8 @@ changes along the way.
 - [x] Phase 0 — this document
 - [x] Phase 1 — backend skeleton + `/api/health`
 - [x] Phase 2 — database + migrations (`posts`, `contact_messages`, real Postgres in CI and docker-compose)
-- [ ] Phase 3 — blog CRUD API
-- [ ] Phase 4 — admin auth
+- [x] Phase 3 — public blog read API (`GET /api/posts`, `GET /api/posts/:slug`)
+- [ ] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`) — **merged together**: a write endpoint is never committed without its auth guard already in place, so these ship as one phase instead of two
 - [ ] Phase 5 — contact form → real backend
 - [ ] Phase 6 — frontend blog pages
 - [ ] Phase 7 — admin UI

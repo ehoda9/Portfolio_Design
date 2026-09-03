@@ -4,15 +4,17 @@ Backend for [Mahmoud Mohamed's portfolio](../README.md) — the blog and
 contact form persist here. See [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 for the overall design, schema, and phased build plan.
 
-**Status:** Phase 2 — connected to PostgreSQL, migrations for `posts`
-and `contact_messages` are in place and tested against a real database.
-No routes read/write these tables yet (that's Phase 3).
+**Status:** Phase 3 — public blog read API is live and backed by a real
+Postgres database. Write endpoints (create/edit/delete posts) land in
+Phase 4, together with admin auth — never separately.
 
 ## Endpoints (so far)
 
 | Method | Path | Auth |
 |---|---|---|
 | GET | `/api/health` | — |
+| GET | `/api/posts` | public — published posts only, newest first, no `content` field |
+| GET | `/api/posts/:slug` | public — 404 if missing or not published |
 
 ## Database
 
