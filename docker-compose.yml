@@ -1,13 +1,45 @@
-# One command to serve this static site in isolation:
+# One command to bring up the whole app, database included:
 #
 #   docker compose up
 #
-# Then open http://localhost:8080
+# Then:
+#   - site:  http://localhost:8080
+#   - api:   http://localhost:3000/api/health
 #
-# There's only one service because this project has no backend or database
-# to bring up alongside it — it's a static HTML/CSS/JS site.
+# The api service waits for postgres to report healthy before starting,
+# and runs migrations itself (server/src/db/migrate.ts) — nothing extra
+# to do by hand.
 
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portfolio
+    ports:
+      - "5432:5432"
+    volumes:
+      - portfolio_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./server
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/portfolio
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "npm run migrate && npm start"
+
   web:
     image: nginx:alpine
     ports:
@@ -17,3 +49,6 @@ services:
       - ./css:/usr/share/nginx/html/css:ro
       - ./js:/usr/share/nginx/html/js:ro
       - ./assets:/usr/share/nginx/html/assets:ro
+
+volumes:
+  portfolio_db_data:
