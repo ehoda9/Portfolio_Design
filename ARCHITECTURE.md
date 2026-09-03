@@ -89,11 +89,11 @@ changes along the way.
 
 - [x] Phase 0 — this document
 - [x] Phase 1 — backend skeleton + `/api/health`
-- [ ] Phase 2 — database + migrations
+- [x] Phase 2 — database + migrations (`posts`, `contact_messages`, real Postgres in CI and docker-compose)
 - [ ] Phase 3 — blog CRUD API
 - [ ] Phase 4 — admin auth
 - [ ] Phase 5 — contact form → real backend
 - [ ] Phase 6 — frontend blog pages
 - [ ] Phase 7 — admin UI
-- [ ] Phase 8 — full docker-compose (web + api + db)
+- [x] Phase 8 — full docker-compose (web + api + db) — done early in Phase 2, since the API needed a real Postgres to test migrations against locally anyway
 - [ ] Phase 9 — final docs
