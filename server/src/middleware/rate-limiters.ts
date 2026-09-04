@@ -30,3 +30,17 @@ export const apiLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many requests. Try again later.' },
 });
+
+/**
+ * A tighter limit specifically on contact form submissions — separate
+ * from the general API ceiling, since this endpoint writes to the
+ * database and is the obvious target for spam bots. 5 submissions per
+ * IP per 15 minutes is far more than a real visitor sends.
+ */
+export const contactLimiter = rateLimit({
+  windowMs: FIFTEEN_MINUTES,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many messages sent. Please try again later.' },
+});
