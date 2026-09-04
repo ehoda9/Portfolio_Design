@@ -9,6 +9,10 @@
 # The api service waits for postgres to report healthy before starting,
 # and runs migrations itself (server/src/db/migrate.ts) — nothing extra
 # to do by hand.
+#
+# For login/write endpoints to work, copy .env.example to .env at the
+# repo root first and fill in ADMIN_EMAIL / ADMIN_PASSWORD_HASH /
+# JWT_SECRET — Docker Compose reads that file automatically.
 
 services:
   db:
@@ -32,6 +36,10 @@ services:
     environment:
       PORT: 3000
       DATABASE_URL: postgresql://postgres:postgres@db:5432/portfolio
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH}
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
     ports:
       - "3000:3000"
     depends_on:

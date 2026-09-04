@@ -147,21 +147,20 @@ standalone with no backend required.
 
 ## Contact form integration
 
-The contact form (`#contact-form`) currently **simulates** a submission —
-see the `NOTE` comment in `src/script.ts`'s submit handler. It validates
-input with `validateContactForm` and then shows a success message after
-a short delay, but nothing is sent anywhere yet.
+The contact form (`#contact-form`) is wired to the real backend
+([`server/`](./server/README.md)) — `src/lib/contact-api.ts` POSTs to
+`{api-base-url}/api/contact`, where `api-base-url` comes from the
+`<meta name="api-base-url">` tag in `index.html`.
 
-To wire it to a real backend:
+**Running it locally:** the meta tag defaults to `http://localhost:3000`
+— start the backend (`cd server && npm run dev`, or `docker compose up`)
+and the form works as-is.
 
-1. Replace the `setTimeout` block in `src/script.ts` with a `fetch()`
-   call to your endpoint of choice (e.g. Formspree, EmailJS, or your own
-   API route), sending `{ name, email, desc }` as the body.
-2. Only show the success message once that request resolves, and show
-   `errorMsg` (or a new message) if it rejects.
-3. If the endpoint needs a key, don't hardcode it — add a `.env.example`
-   listing the variable name and read it via your hosting provider's
-   environment variables at build/deploy time.
+**Deploying:** change the `content` attribute of that one meta tag to
+your deployed API's URL, and set `CORS_ORIGIN` in the backend's
+environment to this site's real domain (see
+[`server/README.md`](./server/README.md#cors)). No other frontend code
+needs to change.
 
 ## License
 

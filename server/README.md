@@ -4,9 +4,9 @@ Backend for [Mahmoud Mohamed's portfolio](../README.md) — the blog and
 contact form persist here. See [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 for the overall design, schema, and phased build plan.
 
-**Status:** Phase 4 — admin auth and protected write endpoints are live,
-with rate limiting on login (brute-force protection) and across the API
-(abuse ceiling). The blog API is now fully functional end-to-end.
+**Status:** Phase 5 — the contact form now writes to a real database, and
+the API has CORS configured so a browser-based frontend on a different
+origin can call it.
 
 ## Endpoints (so far)
 
@@ -19,6 +19,7 @@ with rate limiting on login (brute-force protection) and across the API
 | POST | `/api/posts` | admin |
 | PUT | `/api/posts/:id` | admin |
 | DELETE | `/api/posts/:id` | admin |
+| POST | `/api/contact` | public (rate-limited: 5/15min per IP) |
 
 ## Admin setup
 
@@ -46,6 +47,13 @@ curl -X POST http://localhost:3000/api/auth/login \
 
 Use the returned `token` as `Authorization: Bearer <token>` on the
 `POST`/`PUT`/`DELETE /api/posts` endpoints.
+
+## CORS
+
+Set `CORS_ORIGIN` in `.env` to the frontend's real origin in production
+(comma-separated if there's more than one, e.g. with and without `www.`).
+Defaults to `http://localhost:8080` if unset. See
+[`ARCHITECTURE.md`](../ARCHITECTURE.md#cors) for details.
 
 ## Database
 

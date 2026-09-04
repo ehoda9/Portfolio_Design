@@ -84,6 +84,9 @@ Two limiters (`express-rate-limit`), sized for what this app actually is
 - **Login** (`/api/auth/login`): 10 attempts per IP per 15 minutes. This
   is the endpoint someone would brute-force a password against, so it's
   deliberately tight.
+- **Contact form** (`/api/contact`): 5 submissions per IP per 15 minutes.
+  Separate from the general ceiling since this endpoint writes to the
+  database and is the natural target for spam bots.
 - **General API** (`/api/*`): 300 requests per IP per 15 minutes. Not
   meant to shape real traffic — it's a ceiling against scraping,
   accidental retry loops, or a flood of pointless requests, without
@@ -92,6 +95,17 @@ Two limiters (`express-rate-limit`), sized for what this app actually is
 No caching layer, connection pool tuning, or horizontal-scaling setup —
 none of that is a real problem at this traffic scale, and adding it now
 would be complexity with nothing to justify it.
+
+## CORS
+
+`CORS_ORIGIN` (comma-separated) controls which frontend origin(s) may
+call the API from a browser. Defaults to `http://localhost:8080` (the
+docker-compose frontend) if unset — set it explicitly to your real
+domain(s) in production. Note CORS is a browser-enforced policy, not a
+server-side access control: it stops a browser from letting a webpage on
+another origin read the response, but a direct request (`curl`, a script,
+another server) is never blocked by it. Rate limiting and auth are what
+actually protect the endpoints.
 
 ## Local development
 
@@ -109,7 +123,7 @@ changes along the way.
 - [x] Phase 2 — database + migrations (`posts`, `contact_messages`, real Postgres in CI and docker-compose)
 - [x] Phase 3 — public blog read API (`GET /api/posts`, `GET /api/posts/:slug`)
 - [x] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`), plus rate limiting (login brute-force protection + a general API ceiling)
-- [ ] Phase 5 — contact form → real backend
+- [x] Phase 5 — contact form → real backend (`POST /api/contact`, persisted to Postgres, CORS configured, spam-limited)
 - [ ] Phase 6 — frontend blog pages
 - [ ] Phase 7 — admin UI
 - [x] Phase 8 — full docker-compose (web + api + db) — done early in Phase 2, since the API needed a real Postgres to test migrations against locally anyway
