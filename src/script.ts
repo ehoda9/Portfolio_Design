@@ -2,6 +2,7 @@ import { validateContactForm } from './lib/validate-contact-form.js';
 import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
 import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
+import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
@@ -84,7 +85,7 @@ const errorMsg = document.getElementById('cf-error') as HTMLParagraphElement;
 const successMsg = document.getElementById('cf-success') as HTMLParagraphElement;
 const submitBtn = document.getElementById('cf-submit') as HTMLButtonElement;
 
-submitBtn.addEventListener('click', () => {
+submitBtn.addEventListener('click', async () => {
   errorMsg.classList.remove('is-visible');
   successMsg.classList.remove('is-visible');
 
@@ -97,16 +98,16 @@ submitBtn.addEventListener('click', () => {
     return;
   }
 
-  // NOTE: this simulates a submission. To wire it to a real backend, POST
-  // { name, email, desc } to your endpoint of choice (Formspree, EmailJS,
-  // your own API route) here and only call the success branch once that
-  // request resolves. See README → "Contact form integration".
   submitBtn.textContent = 'Sending…';
-  setTimeout(() => {
+  const ok = await submitContactMessage(getApiBaseUrl(), { name, email, message: desc });
+  submitBtn.textContent = 'Send message →';
+
+  if (ok) {
     successMsg.classList.add('is-visible');
-    submitBtn.textContent = 'Send message →';
     form.reset();
-  }, 900);
+  } else {
+    errorMsg.classList.add('is-visible');
+  }
 });
 
 // Footer year
