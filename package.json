@@ -20,7 +20,7 @@
     "jsdom": "^24.1.1",
     "three": "^0.185.1",
     "typescript": "^5.5.4",
-    "typescript-eslint": "^8.3.0",
+    "typescript-eslint": "^8.69.0",
     "vitest": "^4.1.11"
   }
 }
