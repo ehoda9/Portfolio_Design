@@ -2,6 +2,8 @@ import { validateContactForm } from './lib/validate-contact-form.js';
 import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
 import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
+import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
+import { initHeroScene } from './lib/hero-scene.js';
 const themeToggle = document.getElementById('theme-toggle');
 const themeThumb = document.getElementById('theme-toggle-thumb');
 const root = document.documentElement;
@@ -62,7 +64,7 @@ const form = document.getElementById('contact-form');
 const errorMsg = document.getElementById('cf-error');
 const successMsg = document.getElementById('cf-success');
 const submitBtn = document.getElementById('cf-submit');
-submitBtn.addEventListener('click', () => {
+submitBtn.addEventListener('click', async () => {
     errorMsg.classList.remove('is-visible');
     successMsg.classList.remove('is-visible');
     const name = document.getElementById('cf-name').value;
@@ -73,10 +75,18 @@ submitBtn.addEventListener('click', () => {
         return;
     }
     submitBtn.textContent = 'Sending…';
-    setTimeout(() => {
+    const ok = await submitContactMessage(getApiBaseUrl(), { name, email, message: desc });
+    submitBtn.textContent = 'Send message';
+    if (ok) {
         successMsg.classList.add('is-visible');
-        submitBtn.textContent = 'Send message →';
         form.reset();
-    }, 900);
+    }
+    else {
+        errorMsg.classList.add('is-visible');
+    }
 });
 document.getElementById('footer-year').textContent = String(new Date().getFullYear());
+const heroCanvas = document.getElementById('hero-scene');
+if (heroCanvas) {
+    void initHeroScene(heroCanvas);
+}

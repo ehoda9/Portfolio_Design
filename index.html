@@ -20,6 +20,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/styles.css">
+
+<!-- Loaded on demand (dynamic import) only for the hero's 3D scene — see
+     src/lib/hero-scene.ts. Never fetched at all if WebGL is unavailable
+     or the user prefers reduced motion. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -63,6 +74,7 @@
     <div class="hero__grid" aria-hidden="true"></div>
     <div class="hero__orb hero__orb--gold" aria-hidden="true"></div>
     <div class="hero__orb hero__orb--cyan" aria-hidden="true"></div>
+    <canvas class="hero__scene" id="hero-scene" aria-hidden="true"></canvas>
 
     <div class="wrap hero__inner">
       <div class="hero__eyebrow fade-up">
@@ -82,7 +94,7 @@
       </p>
 
       <div class="hero__actions fade-up" style="--delay:.18s">
-        <a href="#contact" class="btn btn--primary btn--large">Start a project →</a>
+        <a href="#contact" class="btn btn--primary btn--large">Start a project</a>
         <a href="#work" class="btn btn--secondary btn--large">See my work</a>
       </div>
 
@@ -131,7 +143,7 @@
             <span class="service-card__tag">Blueprints</span>
             <span class="service-card__tag">Gameplay Systems</span>
           </div>
-          <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="service-card__link">View on Fab →</a>
+          <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="service-card__link">View on Fab</a>
         </article>
 
         <article class="service-card fade-up" style="--delay:.10s">
@@ -209,7 +221,7 @@
               <span class="portfolio__category">UE5 Blueprint Asset</span>
               <h3 class="portfolio__title">Cover System</h3>
               <p class="portfolio__subtitle">Commercial Blueprint asset published on Fab — dynamic line tracing and performance-optimized cover detection.</p>
-              <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="portfolio__link">View on Fab →</a>
+              <a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="portfolio__link">View on Fab</a>
             </div>
           </div>
         </article>
@@ -479,7 +491,7 @@
         </div>
         <p class="contact-form__message contact-form__message--error" id="cf-error">Please fill in your name, email, and project details.</p>
         <p class="contact-form__message contact-form__message--success" id="cf-success">Thanks — your message is in. I'll get back to you soon.</p>
-        <button type="button" class="btn btn--primary btn--large contact-form__submit" id="cf-submit">Send message →</button>
+        <button type="button" class="btn btn--primary btn--large contact-form__submit" id="cf-submit">Send message</button>
       </form>
     </div>
   </section>

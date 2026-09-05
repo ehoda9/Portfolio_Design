@@ -3,6 +3,7 @@ import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
 import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
+import { initHeroScene } from './lib/hero-scene.js';
 
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
@@ -100,7 +101,7 @@ submitBtn.addEventListener('click', async () => {
 
   submitBtn.textContent = 'Sending…';
   const ok = await submitContactMessage(getApiBaseUrl(), { name, email, message: desc });
-  submitBtn.textContent = 'Send message →';
+  submitBtn.textContent = 'Send message';
 
   if (ok) {
     successMsg.classList.add('is-visible');
@@ -112,3 +113,9 @@ submitBtn.addEventListener('click', async () => {
 
 // Footer year
 (document.getElementById('footer-year') as HTMLSpanElement).textContent = String(new Date().getFullYear());
+
+// Hero 3D scene — a no-op if WebGL is unavailable or motion is reduced
+const heroCanvas = document.getElementById('hero-scene') as HTMLCanvasElement | null;
+if (heroCanvas) {
+  void initHeroScene(heroCanvas);
+}
