@@ -33,6 +33,7 @@ resolve the module) — the real library ships to the browser from
 `cdn.jsdelivr.net`, never from this repo.
 
 The scene:
+
 - Never loads at all if the user prefers reduced motion or the browser
   lacks WebGL (`src/lib/hero-scene.ts` feature-detects both before ever
   importing three.js).
@@ -109,6 +110,7 @@ docker compose up
 ```
 
 Brings up three services together:
+
 - `web` — nginx serving this static site at `http://localhost:8080`
 - `api` — the Express backend ([`server/`](./server/README.md)) at
   `http://localhost:3000`, migrating its own database on startup
@@ -190,4 +192,3 @@ for portfolio review only; it isn't licensed for reuse.
 
 - GitHub: [github.com/ehoda9](https://github.com/ehoda9)
 - LinkedIn: [mahmoud-mohamed3](https://www.linkedin.com/in/mahmoud-mohamed3/)
-- Phone: +20 106 881 1625
