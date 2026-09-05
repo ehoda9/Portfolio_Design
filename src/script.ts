@@ -4,6 +4,8 @@ import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 import { initHeroScene } from './lib/hero-scene.js';
+import { computeScrollProgress } from './lib/scroll-progress.js';
+import { computePointerPercent } from './lib/spotlight.js';
 
 // Theme toggle
 const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
@@ -30,9 +32,15 @@ mobileNav.querySelectorAll<HTMLAnchorElement>('.mobile-nav__link').forEach(link 
 const header = document.getElementById('site-header') as HTMLElement;
 const navLinks = document.querySelectorAll<HTMLAnchorElement>('.site-header__nav-link');
 const sectionIds: string[] = ['services', 'work', 'about', 'skills', 'faq'];
+const scrollProgressBar = document.getElementById('scroll-progress') as HTMLDivElement;
 
 window.addEventListener('scroll', () => {
-  header.style.padding = window.scrollY > 30 ? 'var(--sp-3) 0' : 'var(--sp-4) 0';
+  const scrolled = window.scrollY > 30;
+  header.style.padding = scrolled ? 'var(--sp-3) 0' : 'var(--sp-4) 0';
+  header.classList.toggle('site-header--scrolled', scrolled);
+
+  const progress = computeScrollProgress(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
+  scrollProgressBar.style.width = `${progress}%`;
 
   let current = '';
   sectionIds.forEach(id => {
@@ -119,3 +127,12 @@ const heroCanvas = document.getElementById('hero-scene') as HTMLCanvasElement | 
 if (heroCanvas) {
   void initHeroScene(heroCanvas);
 }
+
+// Spotlight-follow-cursor glow on service cards
+document.querySelectorAll<HTMLElement>('.service-card').forEach(card => {
+  card.addEventListener('pointermove', (e: PointerEvent) => {
+    const { x, y } = computePointerPercent(card.getBoundingClientRect(), e.clientX, e.clientY);
+    card.style.setProperty('--mx', `${x}%`);
+    card.style.setProperty('--my', `${y}%`);
+  });
+});

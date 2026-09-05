@@ -7,6 +7,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 // the module body instead of returning a cached instance.
 
 const FIXTURE = `
+  <div id="scroll-progress"></div>
+
   <header id="site-header">
     <button id="theme-toggle"><span id="theme-toggle-thumb"></span></button>
     <ul>
@@ -15,6 +17,8 @@ const FIXTURE = `
     </ul>
     <button id="menu-btn" aria-expanded="false"></button>
   </header>
+
+  <div class="service-card"></div>
 
   <div id="mobile-nav">
     <a class="mobile-nav__link" href="#services">Services</a>
@@ -79,6 +83,40 @@ describe('script.ts DOM wiring', () => {
   it('sets the footer year on load', async () => {
     await loadScript();
     expect(document.getElementById('footer-year')?.textContent).toBe(String(new Date().getFullYear()));
+  });
+
+  it('updates the scroll progress bar width on scroll', async () => {
+    await loadScript();
+    Object.defineProperty(window, 'scrollY', { value: 500, configurable: true });
+    Object.defineProperty(document.documentElement, 'scrollHeight', { value: 2500, configurable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 500, configurable: true });
+
+    window.dispatchEvent(new Event('scroll'));
+
+    const bar = document.getElementById('scroll-progress') as HTMLDivElement;
+    expect(bar.style.width).toBe('25%');
+  });
+
+  it('adds the scrolled header class past the scroll threshold', async () => {
+    await loadScript();
+    Object.defineProperty(window, 'scrollY', { value: 100, configurable: true });
+
+    window.dispatchEvent(new Event('scroll'));
+
+    expect(document.getElementById('site-header')?.classList.contains('site-header--scrolled')).toBe(true);
+  });
+
+  it('sets spotlight position custom properties on service card pointer move', async () => {
+    await loadScript();
+    const card = document.querySelector('.service-card') as HTMLElement;
+    vi.spyOn(card, 'getBoundingClientRect').mockReturnValue({
+      left: 0, top: 0, width: 200, height: 100, right: 200, bottom: 100, x: 0, y: 0, toJSON: () => ({}),
+    });
+
+    card.dispatchEvent(new MouseEvent('pointermove', { clientX: 100, clientY: 50, bubbles: true }));
+
+    expect(card.style.getPropertyValue('--mx')).toBe('50%');
+    expect(card.style.getPropertyValue('--my')).toBe('50%');
   });
 
   it('toggles the theme and swaps the toggle icon on click', async () => {
