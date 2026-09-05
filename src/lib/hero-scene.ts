@@ -19,21 +19,23 @@ export function readCssColor(varName: string, fallback: string): string {
 }
 
 /**
- * Sets up a subtle rotating wireframe in the hero section — a
- * blueprint-style geometric form that drifts gently and responds to
- * pointer position. Returns a cleanup function, or null if the scene
- * never started (no WebGL, or the user prefers reduced motion) — in
+ * Sets up a rotating blueprint-style 3D scene spanning the hero section —
+ * two concentric wireframe shells (gold outer, cyan inner) counter-rotating
+ * at different speeds, a scattering of node points, and a camera that
+ * drifts toward the pointer for a real sense of depth/parallax, not just
+ * an object spinning in place. Returns a cleanup function, or null if the
+ * scene never started (no WebGL, or the user prefers reduced motion) — in
  * either case the existing CSS grid/gradient background is left as the
  * only visual, nothing else needs to change.
  *
- * three.js is dynamically imported, not statically — its ~600KB is
- * never fetched at all for users who won't see the scene anyway.
+ * three.js is dynamically imported, not statically — its ~600KB is never
+ * fetched at all for users who won't see the scene anyway.
  *
- * Everything below this point touches a real WebGL context, which
- * jsdom (used in tests) never implements — there is no way to exercise
- * it in this test suite. tests/hero-scene.test.ts covers the two pure
- * helpers above instead, and confirms this function correctly returns
- * null when WebGL/motion preferences say it should.
+ * Everything below this point touches a real WebGL context, which jsdom
+ * (used in tests) never implements — there is no way to exercise it in
+ * this test suite. tests/hero-scene.test.ts covers the two pure helpers
+ * above instead, and confirms this function correctly returns null when
+ * WebGL/motion preferences say it should.
  */
 /* v8 ignore start */
 export async function initHeroScene(canvas: HTMLCanvasElement): Promise<HeroSceneCleanup | null> {
@@ -43,34 +45,45 @@ export async function initHeroScene(canvas: HTMLCanvasElement): Promise<HeroScen
   const THREE = await import('three');
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.z = 6;
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+  const baseCameraPos = new THREE.Vector3(0, 0, 7.5);
+  camera.position.copy(baseCameraPos);
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  const group = new THREE.Group();
+  const gold = readCssColor('--gold', '#d9b36c');
+  const cyan = readCssColor('--cyan', '#5b9ee8');
 
-  const geometry = new THREE.IcosahedronGeometry(2, 1);
-  const wireframe = new THREE.WireframeGeometry(geometry);
-  const line = new THREE.LineSegments(
-    wireframe,
-    new THREE.LineBasicMaterial({ color: readCssColor('--gold', '#d9b36c'), transparent: true, opacity: 0.55 })
+  // Outer shell — larger, slower, gold.
+  const outerGeometry = new THREE.IcosahedronGeometry(3.1, 1);
+  const outerWireframe = new THREE.WireframeGeometry(outerGeometry);
+  const outerLine = new THREE.LineSegments(
+    outerWireframe,
+    new THREE.LineBasicMaterial({ color: gold, transparent: true, opacity: 0.85 })
   );
-  group.add(line);
 
-  // A handful of small "node" points at vertices — a nod to the data/AI
-  // side of the brand, not just the game-dev wireframe.
-  const positions = geometry.attributes.position;
+  // Inner shell — smaller, faster, cyan, counter-rotating.
+  const innerGeometry = new THREE.IcosahedronGeometry(1.7, 1);
+  const innerWireframe = new THREE.WireframeGeometry(innerGeometry);
+  const innerLine = new THREE.LineSegments(
+    innerWireframe,
+    new THREE.LineBasicMaterial({ color: cyan, transparent: true, opacity: 0.7 })
+  );
+
+  // Node points scattered on the outer shell — a nod to the data/AI side
+  // of the brand, not just the game-dev wireframe.
+  const positions = outerGeometry.attributes.position;
   const nodePositions: number[] = [];
-  for (let i = 0; i < positions.count; i += 4) {
+  for (let i = 0; i < positions.count; i += 3) {
     nodePositions.push(positions.getX(i), positions.getY(i), positions.getZ(i));
   }
   const nodeGeometry = new THREE.BufferGeometry();
   nodeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(nodePositions, 3));
-  const nodes = new THREE.Points(nodeGeometry, new THREE.PointsMaterial({ color: readCssColor('--cyan', '#5b9ee8'), size: 0.06 }));
-  group.add(nodes);
+  const nodes = new THREE.Points(nodeGeometry, new THREE.PointsMaterial({ color: gold, size: 0.09, transparent: true, opacity: 0.9 }));
 
+  const group = new THREE.Group();
+  group.add(outerLine, innerLine, nodes);
   scene.add(group);
 
   let pointerX = 0;
@@ -108,6 +121,7 @@ export async function initHeroScene(canvas: HTMLCanvasElement): Promise<HeroScen
 
   let running = true;
   let frameId = requestAnimationFrame(tick);
+  let elapsed = 0;
 
   function onVisibilityChange(): void {
     running = document.visibilityState === 'visible';
@@ -118,10 +132,26 @@ export async function initHeroScene(canvas: HTMLCanvasElement): Promise<HeroScen
   function tick(): void {
     if (!running) return;
     if (isVisible) {
-      group.rotation.y += 0.0022;
-      group.rotation.x += 0.0008;
-      group.rotation.y = dampRotation(group.rotation.y, pointerX * 0.3, 0.02);
-      group.rotation.x = dampRotation(group.rotation.x, pointerY * -0.2, 0.02);
+      elapsed += 0.016;
+
+      outerLine.rotation.y += 0.0035;
+      outerLine.rotation.x += 0.0012;
+      nodes.rotation.y = outerLine.rotation.y;
+      nodes.rotation.x = outerLine.rotation.x;
+
+      innerLine.rotation.y -= 0.006;
+      innerLine.rotation.x -= 0.002;
+
+      // Gentle breathing scale on the outer shell.
+      const breathe = 1 + Math.sin(elapsed * 0.6) * 0.03;
+      outerLine.scale.setScalar(breathe);
+
+      // Camera drifts toward the pointer — real parallax depth, not just
+      // the object spinning in place.
+      camera.position.x = dampRotation(camera.position.x, baseCameraPos.x + pointerX * 1.4, 0.03);
+      camera.position.y = dampRotation(camera.position.y, baseCameraPos.y - pointerY * 1.0, 0.03);
+      camera.lookAt(0, 0, 0);
+
       renderer.render(scene, camera);
     }
     frameId = requestAnimationFrame(tick);
@@ -134,10 +164,13 @@ export async function initHeroScene(canvas: HTMLCanvasElement): Promise<HeroScen
     document.removeEventListener('visibilitychange', onVisibilityChange);
     resizeObserver.disconnect();
     intersectionObserver.disconnect();
-    geometry.dispose();
-    wireframe.dispose();
+    outerGeometry.dispose();
+    outerWireframe.dispose();
+    innerGeometry.dispose();
+    innerWireframe.dispose();
     nodeGeometry.dispose();
-    line.material.dispose();
+    outerLine.material.dispose();
+    innerLine.material.dispose();
     nodes.material.dispose();
     renderer.dispose();
   };

@@ -13,24 +13,29 @@ export async function initHeroScene(canvas) {
         return null;
     const THREE = await import('three');
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 6;
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    const baseCameraPos = new THREE.Vector3(0, 0, 7.5);
+    camera.position.copy(baseCameraPos);
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const group = new THREE.Group();
-    const geometry = new THREE.IcosahedronGeometry(2, 1);
-    const wireframe = new THREE.WireframeGeometry(geometry);
-    const line = new THREE.LineSegments(wireframe, new THREE.LineBasicMaterial({ color: readCssColor('--gold', '#d9b36c'), transparent: true, opacity: 0.55 }));
-    group.add(line);
-    const positions = geometry.attributes.position;
+    const gold = readCssColor('--gold', '#d9b36c');
+    const cyan = readCssColor('--cyan', '#5b9ee8');
+    const outerGeometry = new THREE.IcosahedronGeometry(3.1, 1);
+    const outerWireframe = new THREE.WireframeGeometry(outerGeometry);
+    const outerLine = new THREE.LineSegments(outerWireframe, new THREE.LineBasicMaterial({ color: gold, transparent: true, opacity: 0.85 }));
+    const innerGeometry = new THREE.IcosahedronGeometry(1.7, 1);
+    const innerWireframe = new THREE.WireframeGeometry(innerGeometry);
+    const innerLine = new THREE.LineSegments(innerWireframe, new THREE.LineBasicMaterial({ color: cyan, transparent: true, opacity: 0.7 }));
+    const positions = outerGeometry.attributes.position;
     const nodePositions = [];
-    for (let i = 0; i < positions.count; i += 4) {
+    for (let i = 0; i < positions.count; i += 3) {
         nodePositions.push(positions.getX(i), positions.getY(i), positions.getZ(i));
     }
     const nodeGeometry = new THREE.BufferGeometry();
     nodeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(nodePositions, 3));
-    const nodes = new THREE.Points(nodeGeometry, new THREE.PointsMaterial({ color: readCssColor('--cyan', '#5b9ee8'), size: 0.06 }));
-    group.add(nodes);
+    const nodes = new THREE.Points(nodeGeometry, new THREE.PointsMaterial({ color: gold, size: 0.09, transparent: true, opacity: 0.9 }));
+    const group = new THREE.Group();
+    group.add(outerLine, innerLine, nodes);
     scene.add(group);
     let pointerX = 0;
     let pointerY = 0;
@@ -59,6 +64,7 @@ export async function initHeroScene(canvas) {
     intersectionObserver.observe(canvas);
     let running = true;
     let frameId = requestAnimationFrame(tick);
+    let elapsed = 0;
     function onVisibilityChange() {
         running = document.visibilityState === 'visible';
         if (running)
@@ -69,10 +75,18 @@ export async function initHeroScene(canvas) {
         if (!running)
             return;
         if (isVisible) {
-            group.rotation.y += 0.0022;
-            group.rotation.x += 0.0008;
-            group.rotation.y = dampRotation(group.rotation.y, pointerX * 0.3, 0.02);
-            group.rotation.x = dampRotation(group.rotation.x, pointerY * -0.2, 0.02);
+            elapsed += 0.016;
+            outerLine.rotation.y += 0.0035;
+            outerLine.rotation.x += 0.0012;
+            nodes.rotation.y = outerLine.rotation.y;
+            nodes.rotation.x = outerLine.rotation.x;
+            innerLine.rotation.y -= 0.006;
+            innerLine.rotation.x -= 0.002;
+            const breathe = 1 + Math.sin(elapsed * 0.6) * 0.03;
+            outerLine.scale.setScalar(breathe);
+            camera.position.x = dampRotation(camera.position.x, baseCameraPos.x + pointerX * 1.4, 0.03);
+            camera.position.y = dampRotation(camera.position.y, baseCameraPos.y - pointerY * 1.0, 0.03);
+            camera.lookAt(0, 0, 0);
             renderer.render(scene, camera);
         }
         frameId = requestAnimationFrame(tick);
@@ -84,10 +98,13 @@ export async function initHeroScene(canvas) {
         document.removeEventListener('visibilitychange', onVisibilityChange);
         resizeObserver.disconnect();
         intersectionObserver.disconnect();
-        geometry.dispose();
-        wireframe.dispose();
+        outerGeometry.dispose();
+        outerWireframe.dispose();
+        innerGeometry.dispose();
+        innerWireframe.dispose();
         nodeGeometry.dispose();
-        line.material.dispose();
+        outerLine.material.dispose();
+        innerLine.material.dispose();
         nodes.material.dispose();
         renderer.dispose();
     };
