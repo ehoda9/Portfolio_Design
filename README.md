@@ -22,6 +22,25 @@ is loaded directly by `index.html` via a native `<script type="module">`,
 so the site runs in any browser with no build step required. `src/**/*.ts`
 is the source of truth.
 
+## Hero 3D scene
+
+The hero section has a subtle rotating wireframe built with
+[three.js](https://threejs.org), loaded from a CDN via an import map in
+`index.html` — not bundled, matching the rest of this project's
+no-bundler approach. `three` and `@types/three` are **devDependencies
+only** (needed for local type-checking and for the test runner to
+resolve the module) — the real library ships to the browser from
+`cdn.jsdelivr.net`, never from this repo.
+
+The scene:
+- Never loads at all if the user prefers reduced motion or the browser
+  lacks WebGL (`src/lib/hero-scene.ts` feature-detects both before ever
+  importing three.js).
+- Is hidden outright under 700px viewport width (`css/styles.css`) —
+  not worth the GPU/battery cost on small phones.
+- Pauses its render loop when scrolled off-screen or the tab is
+  backgrounded (`IntersectionObserver` + `visibilitychange`).
+
 ## Architecture
 
 The TypeScript layer is split into two kinds of module:
