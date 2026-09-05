@@ -50,13 +50,14 @@ const FIXTURE = `
     <textarea id="cf-desc"></textarea>
     <p id="cf-error"></p>
     <p id="cf-success"></p>
-    <button type="button" id="cf-submit">Send message →</button>
+    <button type="button" id="cf-submit">Send message</button>
   </form>
 
   <span id="footer-year"></span>
 `;
 
 async function loadScript() {
+  document.head.innerHTML = '<meta name="api-base-url" content="http://localhost:3000">';
   document.body.innerHTML = FIXTURE;
   vi.resetModules();
   await import('../src/script');
@@ -134,8 +135,10 @@ describe('script.ts DOM wiring', () => {
     expect(document.getElementById('cf-error')?.classList.contains('is-visible')).toBe(true);
   });
 
-  it('shows a success message after a valid contact form submission', async () => {
-    vi.useFakeTimers();
+  it('shows a success message and POSTs to the API after a valid submission', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal('fetch', fetchMock);
+
     await loadScript();
 
     (document.getElementById('cf-name') as HTMLInputElement).value = 'Mahmoud';
@@ -143,9 +146,33 @@ describe('script.ts DOM wiring', () => {
     (document.getElementById('cf-desc') as HTMLTextAreaElement).value = 'A UE5 project';
     document.getElementById('cf-submit')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
-    await vi.runAllTimersAsync();
+    await vi.waitFor(() => {
+      expect(document.getElementById('cf-success')?.classList.contains('is-visible')).toBe(true);
+    });
 
-    expect(document.getElementById('cf-success')?.classList.contains('is-visible')).toBe(true);
-    vi.useRealTimers();
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://localhost:3000/api/contact',
+      expect.objectContaining({ method: 'POST' })
+    );
+
+    vi.unstubAllGlobals();
+  });
+
+  it('shows an error message when the backend submission fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+
+    await loadScript();
+
+    (document.getElementById('cf-name') as HTMLInputElement).value = 'Mahmoud';
+    (document.getElementById('cf-email') as HTMLInputElement).value = 'mahmoud@example.com';
+    (document.getElementById('cf-desc') as HTMLTextAreaElement).value = 'A UE5 project';
+    document.getElementById('cf-submit')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    await vi.waitFor(() => {
+      expect(document.getElementById('cf-error')?.classList.contains('is-visible')).toBe(true);
+    });
+
+    expect(document.getElementById('cf-success')?.classList.contains('is-visible')).toBe(false);
+    vi.unstubAllGlobals();
   });
 });
