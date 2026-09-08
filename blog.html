@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Mahmoud Mohamed</title>
+<meta name="description" content="Writing on front-end development, UE5 Blueprints, AI evaluation, and automation.">
+<meta name="author" content="Mahmoud Mohamed">
+<meta property="og:title" content="Blog — Mahmoud Mohamed">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B0D13">
+<meta name="api-base-url" content="http://localhost:3000">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<header class="site-header" id="site-header">
+  <div class="wrap site-header__inner">
+    <a href="index.html" class="site-header__logo">MM<span class="site-header__logo-dot">.</span></a>
+
+    <ul class="site-header__nav">
+      <li><a href="index.html#services" class="site-header__nav-link">Services</a></li>
+      <li><a href="index.html#work" class="site-header__nav-link">Work</a></li>
+      <li><a href="index.html#skills" class="site-header__nav-link">Skills</a></li>
+      <li><a href="index.html#about" class="site-header__nav-link">About</a></li>
+      <li><a href="index.html#faq" class="site-header__nav-link">FAQ</a></li>
+      <li><a href="blog.html" class="site-header__nav-link site-header__nav-link--active">Blog</a></li>
+    </ul>
+
+    <div class="site-header__actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
+        <span class="theme-toggle__thumb" id="theme-toggle-thumb">🌙</span>
+      </button>
+      <a href="index.html#contact" class="btn btn--primary site-header__cta">Get in touch</a>
+      <button class="menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="index.html#services" class="mobile-nav__link">Services</a>
+  <a href="index.html#work" class="mobile-nav__link">Work</a>
+  <a href="index.html#skills" class="mobile-nav__link">Skills</a>
+  <a href="index.html#about" class="mobile-nav__link">About</a>
+  <a href="index.html#faq" class="mobile-nav__link">FAQ</a>
+  <a href="blog.html" class="mobile-nav__link">Blog</a>
+  <a href="index.html#contact" class="mobile-nav__link mobile-nav__link--cta">Get in touch</a>
+</div>
+
+<main id="top">
+  <section class="section blog-hero" aria-label="Blog">
+    <div class="wrap">
+      <span class="section__eyebrow fade-up">Writing</span>
+      <h1 class="section__title fade-up">Blog</h1>
+      <p class="section__subtitle fade-up">Notes on front-end development, UE5 Blueprints, AI evaluation, and automation.</p>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section class="section" aria-label="Posts">
+    <div class="wrap">
+      <div id="blog-list-loading" class="blog-list__state">Loading posts…</div>
+      <div id="blog-list-empty" class="blog-list__state" hidden>No posts yet — check back soon.</div>
+      <div id="blog-list-error" class="blog-list__state" hidden>Couldn't load posts right now. Please try again shortly.</div>
+      <div id="blog-list" class="blog-list" hidden></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div>
+      <a href="index.html" class="site-header__logo">MM<span class="site-header__logo-dot">.</span></a>
+      <p class="site-footer__tag">Front-end dev, UE5 Blueprints &amp; AI data work.</p>
+    </div>
+    <ul class="site-footer__links">
+      <li><a href="index.html#services" class="site-footer__link">Services</a></li>
+      <li><a href="index.html#work" class="site-footer__link">Work</a></li>
+      <li><a href="index.html#about" class="site-footer__link">About</a></li>
+      <li><a href="blog.html" class="site-footer__link">Blog</a></li>
+      <li><a href="index.html#contact" class="site-footer__link">Contact</a></li>
+    </ul>
+    <ul class="site-footer__links">
+      <li><a href="https://github.com/ehoda9" target="_blank" rel="noopener" class="site-footer__link">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/mahmoud-mohamed3/" target="_blank" rel="noopener" class="site-footer__link">LinkedIn</a></li>
+      <li><a href="https://www.fab.com/listings/4c824eba-0f95-4a48-9f02-b329210be70e" target="_blank" rel="noopener" class="site-footer__link">Fab</a></li>
+      <li><a href="tel:+201068811625" class="site-footer__link">+20 106 881 1625</a></li>
+    </ul>
+  </div>
+  <div class="wrap">
+    <p class="site-footer__copy">© <span id="footer-year"></span> Mahmoud Mohamed. Built by hand.</p>
+  </div>
+</footer>
+
+<script src="js/blog.js" type="module"></script>
+</body>
+</html>
