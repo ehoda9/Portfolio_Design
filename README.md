@@ -1,4 +1,4 @@
-# Mahmoud Mohamed — Portfolio
+# MM — Portfolio
 
 **Project classification:** this is a static front-end site (HTML, CSS,
 TypeScript) plus a small Express/PostgreSQL backend under `server/` for
@@ -63,27 +63,40 @@ while `script.ts` stays a straightforward DOM-wiring layer.
 ## Structure
 
 ```
-index.html
+index.html                  ← homepage
+blog.html                    ← blog post list
+blog-post.html                ← blog post detail (?slug=... query param)
 css/
   styles.css
 src/
-  script.ts              ← entry point, wires DOM to lib/
+  script.ts                  ← index.html entry, wires DOM to lib/
+  blog.ts                     ← blog.html entry
+  blog-post.ts                  ← blog-post.html entry
   lib/
+    site-chrome.ts               ← shared header/nav/theme/scroll-progress wiring
     validate-contact-form.ts
+    contact-api.ts
+    blog-api.ts
+    blog-render.ts                 ← Markdown → sanitized HTML (marked + DOMPurify)
+    format-date.ts
+    hero-scene.ts                   ← 3D hero (three.js, dev-only dependency)
+    webgl-support.ts
+    scroll-progress.ts
+    spotlight.ts
     nav.ts
     faq.ts
     portfolio-filter.ts
-js/                       ← compiled output (committed), mirrors src/
-tests/
-  validate-contact-form.test.ts
-  nav.test.ts
-  faq.test.ts
-  portfolio-filter.test.ts
+js/                           ← compiled output (committed), mirrors src/
+tests/                         ← one file per src/ module, plus *-wiring.test.ts
+                                  integration tests per entry point
 assets/
   img/
+server/                         ← backend API — see server/README.md
+ARCHITECTURE.md                  ← system design, schema, phased build plan
 .github/
-  workflows/ci.yml         ← build + lint + test on every push
+  workflows/ci.yml                 ← build + lint + test on every push
   dependabot.yml
+docker-compose.yml                 ← web + api + db, one command
 tsconfig.json
 vitest.config.ts
 eslint.config.js
@@ -93,7 +106,11 @@ package-lock.json
 
 ## Running locally
 
-No server or environment variables are required — this is a static site.
+No environment variables are required to view the site itself, but the
+contact form and blog pages need the backend running (see
+[`server/README.md`](./server/README.md)) — either `docker compose up`
+(brings up everything) or `cd server && npm run dev` alongside serving
+this folder separately.
 
 ```bash
 npm install
@@ -165,6 +182,31 @@ This site is growing a real backend (blog + contact form persistence) in
 for the design and build phases. It's being built incrementally and
 doesn't affect anything in this README above; the frontend still runs
 standalone with no backend required.
+
+## Blog
+
+`blog.html` lists published posts; `blog-post.html?slug=your-slug` shows
+one in full, rendering its Markdown `content` to sanitized HTML
+(`src/lib/blog-render.ts` — `marked` + `DOMPurify`, both dev-only
+dependencies loaded from a CDN, same pattern as three.js).
+
+**There's no admin UI yet** (that's Phase 7) — until then, create/edit
+posts via the admin API directly:
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","password":"your-password"}' | python3 -c "import json,sys;print(json.load(sys.stdin)['token'])")
+
+curl -X POST http://localhost:3000/api/posts \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"slug":"hello-world","title":"Hello, World","excerpt":"First post","content":"# Hi\n\nSome **Markdown** here.","status":"published"}'
+```
+
+See [`server/README.md`](./server/README.md#admin-setup) for the login
+setup, and `server/src/lib/validate-post.ts` for the exact validation
+rules (slug format, length limits).
 
 ## Contact form integration
 

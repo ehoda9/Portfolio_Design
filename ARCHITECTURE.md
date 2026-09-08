@@ -124,7 +124,7 @@ changes along the way.
 - [x] Phase 3 — public blog read API (`GET /api/posts`, `GET /api/posts/:slug`)
 - [x] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`), plus rate limiting (login brute-force protection + a general API ceiling)
 - [x] Phase 5 — contact form → real backend (`POST /api/contact`, persisted to Postgres, CORS configured, spam-limited)
-- [ ] Phase 6 — frontend blog pages
+- [x] Phase 6 — frontend blog pages (`blog.html` list + `blog-post.html` detail, Markdown rendering with XSS sanitization, consume the Phase 3 read API)
 - [ ] Phase 7 — admin UI
 - [x] Phase 8 — full docker-compose (web + api + db) — done early in Phase 2, since the API needed a real Postgres to test migrations against locally anyway
 - [ ] Phase 9 — final docs
