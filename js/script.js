@@ -1,35 +1,14 @@
 import { validateContactForm } from './lib/validate-contact-form.js';
-import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
 import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 import { initHeroScene } from './lib/hero-scene.js';
-import { computeScrollProgress } from './lib/scroll-progress.js';
 import { computePointerPercent } from './lib/spotlight.js';
-const themeToggle = document.getElementById('theme-toggle');
-const themeThumb = document.getElementById('theme-toggle-thumb');
-const root = document.documentElement;
-themeToggle.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    themeThumb.textContent = next === 'dark' ? '🌙' : '☀️';
-});
-const menuBtn = document.getElementById('menu-btn');
-const mobileNav = document.getElementById('mobile-nav');
-menuBtn.addEventListener('click', () => toggleMobileNav(mobileNav, menuBtn));
-mobileNav.querySelectorAll('.mobile-nav__link').forEach(link => {
-    link.addEventListener('click', () => closeMobileNav(mobileNav, menuBtn));
-});
-const header = document.getElementById('site-header');
+import { initSiteChrome } from './lib/site-chrome.js';
+initSiteChrome();
 const navLinks = document.querySelectorAll('.site-header__nav-link');
 const sectionIds = ['services', 'work', 'about', 'skills', 'faq'];
-const scrollProgressBar = document.getElementById('scroll-progress');
 window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY > 30;
-    header.style.padding = scrolled ? 'var(--sp-3) 0' : 'var(--sp-4) 0';
-    header.classList.toggle('site-header--scrolled', scrolled);
-    const progress = computeScrollProgress(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
-    scrollProgressBar.style.width = `${progress}%`;
     let current = '';
     sectionIds.forEach(id => {
         const el = document.getElementById(id);
@@ -92,7 +71,6 @@ submitBtn.addEventListener('click', async () => {
         errorMsg.classList.add('is-visible');
     }
 });
-document.getElementById('footer-year').textContent = String(new Date().getFullYear());
 const heroCanvas = document.getElementById('hero-scene');
 if (heroCanvas) {
     void initHeroScene(heroCanvas);

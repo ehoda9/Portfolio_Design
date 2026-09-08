@@ -1,56 +1,32 @@
 import { validateContactForm } from './lib/validate-contact-form.js';
-import { closeMobileNav, toggleMobileNav } from './lib/nav.js';
 import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 import { initHeroScene } from './lib/hero-scene.js';
-import { computeScrollProgress } from './lib/scroll-progress.js';
 import { computePointerPercent } from './lib/spotlight.js';
+import { initSiteChrome } from './lib/site-chrome.js';
 
-// Theme toggle
-const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
-const themeThumb = document.getElementById('theme-toggle-thumb') as HTMLSpanElement;
-const root = document.documentElement;
+initSiteChrome();
 
-themeToggle.addEventListener('click', () => {
-  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', next);
-  themeThumb.textContent = next === 'dark' ? '🌙' : '☀️';
-});
-
-// Mobile nav
-const menuBtn = document.getElementById('menu-btn') as HTMLButtonElement;
-const mobileNav = document.getElementById('mobile-nav') as HTMLDivElement;
-
-menuBtn.addEventListener('click', () => toggleMobileNav(mobileNav, menuBtn));
-
-mobileNav.querySelectorAll<HTMLAnchorElement>('.mobile-nav__link').forEach(link => {
-  link.addEventListener('click', () => closeMobileNav(mobileNav, menuBtn));
-});
-
-// Header state + active nav link on scroll
-const header = document.getElementById('site-header') as HTMLElement;
+// Active nav link on scroll — index.html-specific (in-page sections),
+// on top of the shared header/progress-bar behavior initSiteChrome sets up.
 const navLinks = document.querySelectorAll<HTMLAnchorElement>('.site-header__nav-link');
 const sectionIds: string[] = ['services', 'work', 'about', 'skills', 'faq'];
-const scrollProgressBar = document.getElementById('scroll-progress') as HTMLDivElement;
 
-window.addEventListener('scroll', () => {
-  const scrolled = window.scrollY > 30;
-  header.style.padding = scrolled ? 'var(--sp-3) 0' : 'var(--sp-4) 0';
-  header.classList.toggle('site-header--scrolled', scrolled);
-
-  const progress = computeScrollProgress(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
-  scrollProgressBar.style.width = `${progress}%`;
-
-  let current = '';
-  sectionIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el && window.scrollY >= el.offsetTop - 140) current = id;
-  });
-  navLinks.forEach(link => {
-    link.classList.toggle('site-header__nav-link--active', link.dataset.section === current);
-  });
-}, { passive: true });
+window.addEventListener(
+  'scroll',
+  () => {
+    let current = '';
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 140) current = id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('site-header__nav-link--active', link.dataset.section === current);
+    });
+  },
+  { passive: true }
+);
 
 // Fade-up reveal on scroll
 const revealObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
@@ -118,9 +94,6 @@ submitBtn.addEventListener('click', async () => {
     errorMsg.classList.add('is-visible');
   }
 });
-
-// Footer year
-(document.getElementById('footer-year') as HTMLSpanElement).textContent = String(new Date().getFullYear());
 
 // Hero 3D scene — a no-op if WebGL is unavailable or motion is reduced
 const heroCanvas = document.getElementById('hero-scene') as HTMLCanvasElement | null;
