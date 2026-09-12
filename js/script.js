@@ -3,6 +3,7 @@ import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 import { initHeroScene } from './lib/hero-scene.js';
+import { initAboutScene } from './lib/about-scene.js';
 import { computePointerPercent } from './lib/spotlight.js';
 import { initSiteChrome } from './lib/site-chrome.js';
 initSiteChrome();
@@ -74,6 +75,22 @@ submitBtn.addEventListener('click', async () => {
 const heroCanvas = document.getElementById('hero-scene');
 if (heroCanvas) {
     void initHeroScene(heroCanvas);
+}
+const aboutPhotoWrap = document.querySelector('.about__photo-wrap');
+const aboutCanvas = document.getElementById('about-scene');
+const aboutPhotoImg = document.getElementById('about-photo');
+if (aboutPhotoWrap && aboutCanvas && aboutPhotoImg) {
+    const aboutObserver = new IntersectionObserver(entries => {
+        var _a;
+        if (!((_a = entries[0]) === null || _a === void 0 ? void 0 : _a.isIntersecting))
+            return;
+        aboutObserver.disconnect();
+        void initAboutScene(aboutCanvas, aboutPhotoImg.src).then(cleanup => {
+            if (cleanup)
+                aboutPhotoWrap.classList.add('is-3d');
+        });
+    }, { threshold: 0.2 });
+    aboutObserver.observe(aboutPhotoWrap);
 }
 document.querySelectorAll('.service-card').forEach(card => {
     card.addEventListener('pointermove', (e) => {
