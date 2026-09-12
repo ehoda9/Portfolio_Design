@@ -3,6 +3,7 @@ import { toggleFaqItem } from './lib/faq.js';
 import { shouldShowPortfolioItem } from './lib/portfolio-filter.js';
 import { getApiBaseUrl, submitContactMessage } from './lib/contact-api.js';
 import { initHeroScene } from './lib/hero-scene.js';
+import { initAboutScene } from './lib/about-scene.js';
 import { computePointerPercent } from './lib/spotlight.js';
 import { initSiteChrome } from './lib/site-chrome.js';
 
@@ -99,6 +100,26 @@ submitBtn.addEventListener('click', async () => {
 const heroCanvas = document.getElementById('hero-scene') as HTMLCanvasElement | null;
 if (heroCanvas) {
   void initHeroScene(heroCanvas);
+}
+
+// About photo 3D scene — deferred until the section actually scrolls into
+// view (it's well below the fold, no reason to pay for it any earlier).
+const aboutPhotoWrap = document.querySelector<HTMLElement>('.about__photo-wrap');
+const aboutCanvas = document.getElementById('about-scene') as HTMLCanvasElement | null;
+const aboutPhotoImg = document.getElementById('about-photo') as HTMLImageElement | null;
+
+if (aboutPhotoWrap && aboutCanvas && aboutPhotoImg) {
+  const aboutObserver = new IntersectionObserver(
+    entries => {
+      if (!entries[0]?.isIntersecting) return;
+      aboutObserver.disconnect();
+      void initAboutScene(aboutCanvas, aboutPhotoImg.src).then(cleanup => {
+        if (cleanup) aboutPhotoWrap.classList.add('is-3d');
+      });
+    },
+    { threshold: 0.2 }
+  );
+  aboutObserver.observe(aboutPhotoWrap);
 }
 
 // Spotlight-follow-cursor glow on service cards

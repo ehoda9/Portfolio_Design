@@ -282,8 +282,16 @@ input, select, textarea { font-family: inherit; }
 .about__side { display: flex; flex-direction: column; gap: var(--sp-6); }
 .about__photo {
   width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: var(--radius-lg);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border-strong); transition: opacity 400ms ease;
 }
+.about__photo-wrap { position: relative; }
+.about__photo-wrap.is-3d .about__photo { opacity: 0; }
+.about__photo-scene {
+  position: absolute; inset: -12%; width: 124%; height: 124%;
+  opacity: 0; transition: opacity 500ms ease; pointer-events: none;
+}
+.about__photo-wrap.is-3d .about__photo-scene { opacity: 1; pointer-events: auto; }
+@media (max-width: 900px) { .about__photo-scene { inset: -6%; width: 112%; height: 112%; } }
 .about__card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
   padding: var(--sp-8); display: flex; flex-direction: column; gap: var(--sp-2);
