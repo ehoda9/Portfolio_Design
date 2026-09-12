@@ -1,4 +1,4 @@
-# MM — Portfolio
+# Mahmoud Mohamed — Portfolio
 
 **Project classification:** this is a static front-end site (HTML, CSS,
 TypeScript) plus a small Express/PostgreSQL backend under `server/` for
@@ -33,7 +33,6 @@ resolve the module) — the real library ships to the browser from
 `cdn.jsdelivr.net`, never from this repo.
 
 The scene:
-
 - Never loads at all if the user prefers reduced motion or the browser
   lacks WebGL (`src/lib/hero-scene.ts` feature-detects both before ever
   importing three.js).
@@ -41,6 +40,18 @@ The scene:
   not worth the GPU/battery cost on small phones.
 - Pauses its render loop when scrolled off-screen or the tab is
   backgrounded (`IntersectionObserver` + `visibilitychange`).
+
+## About photo 3D scene
+
+The About section's photo (`src/lib/about-scene.ts`) renders as a
+tilting 3D plane — a glowing ring and orbiting particles around it,
+using the photo itself as a texture. Same feature-detection and
+performance discipline as the hero scene, plus one more: it's **lazy by
+default** — three.js isn't even fetched until the About section actually
+scrolls into view (`IntersectionObserver` in `src/script.ts`), since it's
+well below the fold. If it never starts (no WebGL, reduced motion, or
+the image fails to load), the plain `<img>` underneath stays exactly as
+it was — nothing else changes.
 
 ## Architecture
 
@@ -80,6 +91,7 @@ src/
     blog-render.ts                 ← Markdown → sanitized HTML (marked + DOMPurify)
     format-date.ts
     hero-scene.ts                   ← 3D hero (three.js, dev-only dependency)
+    about-scene.ts                   ← 3D About photo (lazy-loaded, same pattern)
     webgl-support.ts
     scroll-progress.ts
     spotlight.ts
@@ -127,7 +139,6 @@ docker compose up
 ```
 
 Brings up three services together:
-
 - `web` — nginx serving this static site at `http://localhost:8080`
 - `api` — the Express backend ([`server/`](./server/README.md)) at
   `http://localhost:3000`, migrating its own database on startup
@@ -234,3 +245,4 @@ for portfolio review only; it isn't licensed for reuse.
 
 - GitHub: [github.com/ehoda9](https://github.com/ehoda9)
 - LinkedIn: [mahmoud-mohamed3](https://www.linkedin.com/in/mahmoud-mohamed3/)
+- Phone: +20 106 881 1625
