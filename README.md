@@ -51,7 +51,57 @@ default** — three.js isn't even fetched until the About section actually
 scrolls into view (`IntersectionObserver` in `src/script.ts`), since it's
 well below the fold. If it never starts (no WebGL, reduced motion, or
 the image fails to load), the plain `<img>` underneath stays exactly as
-it was — nothing else changes.
+it was — nothing else changes. When it doesn't start, a small CSS-only
+glow-pulse animation around the photo (`.about__photo-wrap:not(.is-3d)`)
+runs instead, so the section still feels alive rather than static.
+
+## Reduced motion
+
+`@media (prefers-reduced-motion: reduce)` only disables one thing:
+auto-smooth-scrolling to anchor links (`html { scroll-behavior: auto }`),
+since a long fast scroll is the one thing here with real vestibular-
+trigger potential. Small, slow motion — the hero orb drift, `.fade-up`
+reveals, the status-dot pulse, hover transforms, the About-photo glow
+pulse — stays on: none of it is a vestibular trigger, and disabling
+everything made reduced-motion visits feel dead rather than just calmer.
+The genuinely heavy stuff — the two WebGL scenes — is gated separately
+in JS (`src/lib/webgl-support.ts`), and that gate is intentionally strict.
+
+## Color palettes
+
+Three curated palettes (`src/lib/palette.ts`, tokens in
+`css/styles.css`), each with its own dark and light variant, switchable
+from the gear icon in the header:
+
+- **Blueprint** (default) — gold/cyan, ties to the UE5 Blueprint identity
+  already established in the hero's grid and wireframe.
+- **Terminal** — muted phosphor green + warm amber, evoking annotation/
+  evaluation interfaces, deliberately soft rather than neon-on-black.
+- **Ledger** — warm rust + muted teal, ties to the MissionCoach project
+  and 2026's shift toward warm, tactile neutrals over sterile tech-blue.
+
+None of the three use purple/violet — 2026 color-trend research (see the
+project's design notes) found that near-black-plus-violet has become
+such a strong AI-product visual cliché that it now reads as generic
+rather than distinctive, which is exactly what a portfolio shouldn't be.
+Light mode in every palette uses a warm off-white background and a warm
+near-black (never pure gray) for text — the actual fix for a "washed
+out" light theme is warmth and contrast, not a different hue.
+
+The picker is three circular swatch buttons (each rendered from two CSS
+custom properties, `--sw-a`/`--sw-b` — no images) — deliberately not a
+custom color input, so the choice stays a one-click preset rather than
+free-form tuning. The chosen palette persists in `localStorage` and
+re-applies via `data-palette` on `<html>`, alongside the existing
+`data-theme` attribute; the two are independent, so all 6 combinations
+are one click apart from each other.
+
+## Scroll to top
+
+A small floating button (`.scroll-top`, wired in `site-chrome.ts`)
+appears once the page is scrolled past 400px and smooth-scrolls back to
+the top on click — instantly instead, if the visitor prefers reduced
+motion, since that's a real (if brief) fast-scroll motion.
 
 ## Architecture
 
@@ -95,6 +145,7 @@ src/
     webgl-support.ts
     scroll-progress.ts
     spotlight.ts
+    palette.ts                     ← 3 curated color palettes, persisted in localStorage
     nav.ts
     faq.ts
     portfolio-filter.ts
