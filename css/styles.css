@@ -12,50 +12,63 @@
   --ease: 220ms ease;
 }
 
-[data-theme="dark"] {
-  --bg: #0B0D13;
-  --surface: #12141C;
-  --card: #171923;
-  --card-hover: #1D202C;
-  --border: rgba(255,255,255,.07);
-  --border-strong: rgba(255,255,255,.14);
-
-  --text: #F2F1ED;
-  --text-dim: #A9ACC0;
-  --text-faint: #62657C;
-
-  --gold: #D9B36C;
-  --gold-dim: rgba(217,179,108,.10);
-  --cyan: #5B9EE8;
-  --cyan-dim: rgba(91,158,232,.10);
+[data-theme="dark"][data-palette="1"], [data-theme="dark"]:not([data-palette]) {
+  --bg: #0B0D13; --surface: #12141C; --card: #171923; --card-hover: #1D202C;
+  --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
+  --text: #F2F1ED; --text-dim: #A9ACC0; --text-faint: #62657C;
+  --gold: #D9B36C; --gold-dim: rgba(217,179,108,.10);
+  --cyan: #5B9EE8; --cyan-dim: rgba(91,158,232,.10);
   --green: #5CD98A;
-
-  --nav-bg: rgba(11,13,19,.82);
-  --shadow: 0 10px 40px rgba(0,0,0,.6);
-  --grid-line: rgba(255,255,255,.03);
+  --nav-bg: rgba(11,13,19,.82); --shadow: 0 10px 40px rgba(0,0,0,.6); --grid-line: rgba(255,255,255,.03);
+}
+[data-theme="light"][data-palette="1"], [data-theme="light"]:not([data-palette]) {
+  --bg: #F7F5F0; --surface: #FFFFFF; --card: #EFEAE0; --card-hover: #E5DFD2;
+  --border: rgba(33,29,22,.09); --border-strong: rgba(33,29,22,.18);
+  --text: #211D16; --text-dim: #514A3C; --text-faint: #8A8272;
+  --gold: #8A6408; --gold-dim: rgba(138,100,8,.10);
+  --cyan: #1857AD; --cyan-dim: rgba(24,87,173,.10);
+  --green: #1E8E52;
+  --nav-bg: rgba(247,245,240,.88); --shadow: 0 10px 40px rgba(33,29,22,.12); --grid-line: rgba(33,29,22,.04);
 }
 
-[data-theme="light"] {
-  --bg: #F6F5F1;
-  --surface: #FFFFFF;
-  --card: #ECEAE4;
-  --card-hover: #E3E1D9;
-  --border: rgba(11,13,19,.08);
-  --border-strong: rgba(11,13,19,.16);
+/* Palette 2 -- "Terminal": muted phosphor green + warm amber. */
+[data-theme="dark"][data-palette="2"] {
+  --bg: #0C0F0C; --surface: #141712; --card: #1A1E19; --card-hover: #212620;
+  --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
+  --text: #EDEDE4; --text-dim: #ABB0A0; --text-faint: #666B5C;
+  --gold: #7FBF6A; --gold-dim: rgba(127,191,106,.10);
+  --cyan: #E0A458; --cyan-dim: rgba(224,164,88,.10);
+  --green: #7FBF6A;
+  --nav-bg: rgba(12,15,12,.82); --shadow: 0 10px 40px rgba(0,0,0,.6); --grid-line: rgba(255,255,255,.03);
+}
+[data-theme="light"][data-palette="2"] {
+  --bg: #F6F5EE; --surface: #FFFFFF; --card: #EBE9DC; --card-hover: #E0DECE;
+  --border: rgba(29,27,17,.09); --border-strong: rgba(29,27,17,.18);
+  --text: #1D1B11; --text-dim: #4C4A38; --text-faint: #85826C;
+  --gold: #3F7A2E; --gold-dim: rgba(63,122,46,.10);
+  --cyan: #A8641B; --cyan-dim: rgba(168,100,27,.10);
+  --green: #3F7A2E;
+  --nav-bg: rgba(246,245,238,.88); --shadow: 0 10px 40px rgba(29,27,17,.12); --grid-line: rgba(29,27,17,.04);
+}
 
-  --text: #101218;
-  --text-dim: #454859;
-  --text-faint: #8A8D9C;
-
-  --gold: #96700F;
-  --gold-dim: rgba(150,112,15,.09);
-  --cyan: #1E5FBF;
-  --cyan-dim: rgba(30,95,191,.09);
-  --green: #1E8E52;
-
-  --nav-bg: rgba(246,245,241,.88);
-  --shadow: 0 10px 40px rgba(0,0,0,.12);
-  --grid-line: rgba(11,13,19,.035);
+/* Palette 3 -- "Ledger": warm ink-on-paper, rust + muted teal. */
+[data-theme="dark"][data-palette="3"] {
+  --bg: #14100B; --surface: #1D1712; --card: #241D16; --card-hover: #2C241B;
+  --border: rgba(255,255,255,.07); --border-strong: rgba(255,255,255,.14);
+  --text: #F1EAE0; --text-dim: #BDAE9B; --text-faint: #766753;
+  --gold: #D97D51; --gold-dim: rgba(217,125,81,.10);
+  --cyan: #5FA69C; --cyan-dim: rgba(95,166,156,.10);
+  --green: #5FA69C;
+  --nav-bg: rgba(20,16,11,.82); --shadow: 0 10px 40px rgba(0,0,0,.6); --grid-line: rgba(255,255,255,.03);
+}
+[data-theme="light"][data-palette="3"] {
+  --bg: #F8F2E9; --surface: #FFFFFF; --card: #EEE3D2; --card-hover: #E4D6BF;
+  --border: rgba(43,32,19,.09); --border-strong: rgba(43,32,19,.18);
+  --text: #2B2013; --text-dim: #5C4C36; --text-faint: #93816A;
+  --gold: #A24E28; --gold-dim: rgba(162,78,40,.10);
+  --cyan: #2E6961; --cyan-dim: rgba(46,105,97,.10);
+  --green: #2E6961;
+  --nav-bg: rgba(248,242,233,.88); --shadow: 0 10px 40px rgba(43,32,19,.12); --grid-line: rgba(43,32,19,.04);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -292,6 +305,21 @@ input, select, textarea { font-family: inherit; }
 }
 .about__photo-wrap.is-3d .about__photo-scene { opacity: 1; pointer-events: auto; }
 @media (max-width: 900px) { .about__photo-scene { inset: -6%; width: 112%; height: 112%; } }
+
+/* Lightweight CSS-only fallback for when the 3D scene never starts (no
+   WebGL, or the visitor prefers reduced motion) — a slow, small-amplitude
+   glow ring instead of a dead static photo. Cheap enough to leave running
+   under reduced motion too: it's opacity + scale only, no position or
+   rotation, well clear of vestibular-trigger territory. */
+.about__photo-wrap:not(.is-3d)::after {
+  content: ''; position: absolute; inset: -6%; border-radius: var(--radius-lg);
+  border: 1px solid var(--gold); opacity: .18; pointer-events: none;
+  animation: about-glow-pulse 4s ease-in-out infinite;
+}
+@keyframes about-glow-pulse {
+  0%, 100% { opacity: .12; transform: scale(1); }
+  50% { opacity: .32; transform: scale(1.015); }
+}
 .about__card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
   padding: var(--sp-8); display: flex; flex-direction: column; gap: var(--sp-2);
@@ -396,6 +424,41 @@ input, select, textarea { font-family: inherit; }
 }
 .blog-post__content img { border-radius: var(--radius-md); margin: var(--sp-5) 0; }
 
+/* Scroll to top */
+.scroll-top {
+  position: fixed; bottom: var(--sp-6); right: var(--sp-6); z-index: 150;
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--gold); color: var(--bg); font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow); opacity: 0; transform: translateY(12px);
+  pointer-events: none; transition: opacity 250ms ease, transform 250ms ease, background 200ms ease;
+}
+.scroll-top.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.scroll-top:hover { filter: brightness(1.08); }
+@media (max-width: 600px) { .scroll-top { bottom: var(--sp-4); right: var(--sp-4); width: 42px; height: 42px; } }
+
+/* Palette picker */
+.palette-picker { position: relative; }
+.palette-picker__trigger {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim); transition: color var(--ease), background var(--ease);
+}
+.palette-picker__trigger:hover, .palette-picker__trigger[aria-expanded="true"] { color: var(--gold); background: var(--card); }
+.palette-picker__trigger svg { width: 19px; height: 19px; }
+.palette-picker__menu {
+  position: absolute; top: calc(100% + var(--sp-3)); right: 0; z-index: 120;
+  display: flex; gap: var(--sp-3); padding: var(--sp-3);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-full);
+  box-shadow: var(--shadow);
+}
+.palette-picker__swatch {
+  width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+  background: linear-gradient(135deg, var(--sw-a) 50%, var(--sw-b) 50%);
+  border: 2px solid var(--border-strong); transition: transform var(--ease), border-color var(--ease);
+}
+.palette-picker__swatch:hover { transform: scale(1.1); }
+.palette-picker__swatch.is-active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--sw-a); }
+
 /* Footer */
 .site-footer { padding: var(--sp-16) 0 var(--sp-8); border-top: 1px solid var(--border); }
 .site-footer__inner { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-8); margin-bottom: var(--sp-10); flex-wrap: wrap; }
@@ -421,6 +484,13 @@ input, select, textarea { font-family: inherit; }
   .hero__actions { flex-direction: column; align-items: stretch; }
 }
 
+/* Only the potentially large/fast motion (auto-smooth-scrolling to an
+   anchor, which can jump a long distance quickly) is disabled here.
+   Small, slow motion — the hero orb drift, .fade-up reveals, the status
+   dot pulse, hover transforms — stays on: none of it is a vestibular
+   trigger, and turning it all off made the page feel dead for reduced-
+   motion users instead of just calmer. The heavy stuff (the WebGL hero
+   and About scenes) is gated separately in JS, not here. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  html { scroll-behavior: auto; }
 }
