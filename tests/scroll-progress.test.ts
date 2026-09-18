@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeScrollProgress } from '../src/lib/scroll-progress';
+import { computeScrollProgress, shouldShowScrollTop } from '../src/lib/scroll-progress';
 
 describe('computeScrollProgress', () => {
   it('returns 0 at the top of the page', () => {
@@ -24,5 +24,24 @@ describe('computeScrollProgress', () => {
 
   it('clamps to 0 for a negative scrollTop (elastic overscroll at the top)', () => {
     expect(computeScrollProgress(-50, 3000, 800)).toBe(0);
+  });
+});
+
+describe('shouldShowScrollTop', () => {
+  it('is false at the top of the page', () => {
+    expect(shouldShowScrollTop(0)).toBe(false);
+  });
+
+  it('is false right at the default threshold', () => {
+    expect(shouldShowScrollTop(400)).toBe(false);
+  });
+
+  it('is true just past the default threshold', () => {
+    expect(shouldShowScrollTop(401)).toBe(true);
+  });
+
+  it('respects a custom threshold', () => {
+    expect(shouldShowScrollTop(150, 100)).toBe(true);
+    expect(shouldShowScrollTop(50, 100)).toBe(false);
   });
 });

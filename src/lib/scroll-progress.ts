@@ -8,3 +8,8 @@ export function computeScrollProgress(scrollTop: number, scrollHeight: number, c
   if (max <= 0) return 0;
   return Math.min(100, Math.max(0, (scrollTop / max) * 100));
 }
+
+/** Whether the scroll-to-top button should be visible at this scroll position. Pure. */
+export function shouldShowScrollTop(scrollTop: number, threshold = 400): boolean {
+  return scrollTop > threshold;
+}
