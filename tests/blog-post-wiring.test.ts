@@ -2,8 +2,15 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const FIXTURE = `
   <div id="scroll-progress"></div>
+  <button id="scroll-top"></button>
   <header id="site-header">
     <button id="theme-toggle"><span id="theme-toggle-thumb"></span></button>
+    <button id="palette-trigger" aria-expanded="false"></button>
+    <div id="palette-menu" hidden>
+      <button class="palette-picker__swatch" data-palette="1"></button>
+      <button class="palette-picker__swatch" data-palette="2"></button>
+      <button class="palette-picker__swatch" data-palette="3"></button>
+    </div>
     <button id="menu-btn" aria-expanded="false"></button>
   </header>
   <div id="mobile-nav"></div>

@@ -8,9 +8,16 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const FIXTURE = `
   <div id="scroll-progress"></div>
+  <button id="scroll-top"></button>
 
   <header id="site-header">
     <button id="theme-toggle"><span id="theme-toggle-thumb"></span></button>
+    <button id="palette-trigger" aria-expanded="false"></button>
+    <div id="palette-menu" hidden>
+      <button class="palette-picker__swatch" data-palette="1"></button>
+      <button class="palette-picker__swatch" data-palette="2"></button>
+      <button class="palette-picker__swatch" data-palette="3"></button>
+    </div>
     <ul>
       <li><a class="site-header__nav-link" data-section="services" href="#services">Services</a></li>
       <li><a class="site-header__nav-link" data-section="work" href="#work">Work</a></li>
@@ -211,6 +218,74 @@ describe('script.ts DOM wiring', () => {
     });
 
     expect(document.getElementById('cf-success')?.classList.contains('is-visible')).toBe(false);
+    vi.unstubAllGlobals();
+  });
+
+  it('applies the default palette on load and marks its swatch active', async () => {
+    window.localStorage.clear();
+    await loadScript();
+
+    expect(document.documentElement.getAttribute('data-palette')).toBe('1');
+    const activeSwatch = document.querySelector('.palette-picker__swatch.is-active') as HTMLElement;
+    expect(activeSwatch?.dataset.palette).toBe('1');
+  });
+
+  it('opens the palette menu on trigger click and applies a palette on swatch click', async () => {
+    window.localStorage.clear();
+    await loadScript();
+
+    const trigger = document.getElementById('palette-trigger') as HTMLButtonElement;
+    const menu = document.getElementById('palette-menu') as HTMLDivElement;
+
+    trigger.click();
+    expect(menu.hidden).toBe(false);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+    const secondSwatch = document.querySelector('[data-palette="2"]') as HTMLButtonElement;
+    secondSwatch.click();
+
+    expect(document.documentElement.getAttribute('data-palette')).toBe('2');
+    expect(secondSwatch.classList.contains('is-active')).toBe(true);
+    expect(menu.hidden).toBe(true);
+    expect(window.localStorage.getItem('portfolio-palette')).toBe('2');
+  });
+
+  it('closes the palette menu when clicking outside it', async () => {
+    window.localStorage.clear();
+    await loadScript();
+
+    const trigger = document.getElementById('palette-trigger') as HTMLButtonElement;
+    const menu = document.getElementById('palette-menu') as HTMLDivElement;
+
+    trigger.click();
+    expect(menu.hidden).toBe(false);
+
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    expect(menu.hidden).toBe(true);
+  });
+
+  it('shows the scroll-to-top button past the threshold and hides it above it', async () => {
+    await loadScript();
+    const btn = document.getElementById('scroll-top') as HTMLButtonElement;
+
+    Object.defineProperty(window, 'scrollY', { value: 500, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+    expect(btn.classList.contains('is-visible')).toBe(true);
+
+    Object.defineProperty(window, 'scrollY', { value: 10, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+    expect(btn.classList.contains('is-visible')).toBe(false);
+  });
+
+  it('scrolls to top when the scroll-to-top button is clicked', async () => {
+    await loadScript();
+    const scrollToMock = vi.fn();
+    vi.stubGlobal('scrollTo', scrollToMock);
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: false }));
+
+    document.getElementById('scroll-top')?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
     vi.unstubAllGlobals();
   });
 });
