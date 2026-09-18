@@ -4,3 +4,6 @@ export function computeScrollProgress(scrollTop, scrollHeight, clientHeight) {
         return 0;
     return Math.min(100, Math.max(0, (scrollTop / max) * 100));
 }
+export function shouldShowScrollTop(scrollTop, threshold = 400) {
+    return scrollTop > threshold;
+}
