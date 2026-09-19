@@ -1,5 +1,11 @@
 import { isWebglSupported, prefersReducedMotion } from './webgl-support.js';
 import { dampRotation, readCssColor } from './hero-scene.js';
+export function computeTiltTarget(pointerActive, pointerX, pointerY, elapsed) {
+    if (pointerActive) {
+        return { targetY: pointerX * 0.4, targetX: -pointerY * 0.3 };
+    }
+    return { targetY: Math.sin(elapsed * 0.3) * 0.12, targetX: Math.cos(elapsed * 0.25) * 0.06 };
+}
 export async function initAboutScene(canvas, imageUrl) {
     if (prefersReducedMotion())
         return null;
@@ -94,8 +100,7 @@ export async function initAboutScene(canvas, imageUrl) {
             return;
         if (isVisible) {
             elapsed += 0.016;
-            const targetY = pointerActive ? pointerX * 0.4 : Math.sin(elapsed * 0.3) * 0.12;
-            const targetX = pointerActive ? -pointerY * 0.3 : Math.cos(elapsed * 0.25) * 0.06;
+            const { targetX, targetY } = computeTiltTarget(pointerActive, pointerX, pointerY, elapsed);
             photoMesh.rotation.y = dampRotation(photoMesh.rotation.y, targetY, 0.05);
             photoMesh.rotation.x = dampRotation(photoMesh.rotation.x, targetX, 0.05);
             photoMesh.position.y = Math.sin(elapsed * 0.7) * 0.06;

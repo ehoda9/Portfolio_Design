@@ -3,6 +3,24 @@ import { dampRotation, readCssColor } from './hero-scene.js';
 
 export type AboutSceneCleanup = () => void;
 
+export interface TiltTarget {
+  targetX: number;
+  targetY: number;
+}
+
+/**
+ * The target tilt for the photo mesh — toward the pointer while it's
+ * active over the photo, or a slow idle drift otherwise. Pure — extracted
+ * so this behavior is unit tested directly, since the render loop that
+ * reads it every frame can't run without a real WebGL context.
+ */
+export function computeTiltTarget(pointerActive: boolean, pointerX: number, pointerY: number, elapsed: number): TiltTarget {
+  if (pointerActive) {
+    return { targetY: pointerX * 0.4, targetX: -pointerY * 0.3 };
+  }
+  return { targetY: Math.sin(elapsed * 0.3) * 0.12, targetX: Math.cos(elapsed * 0.25) * 0.06 };
+}
+
 /**
  * Renders the About photo as a tilting 3D plane — a glowing ring and
  * orbiting particles around it, rotating toward the pointer for real
@@ -133,8 +151,7 @@ export async function initAboutScene(canvas: HTMLCanvasElement, imageUrl: string
 
       // Tilt toward the pointer while it's over the photo; otherwise a
       // slow idle drift so the card never looks frozen.
-      const targetY = pointerActive ? pointerX * 0.4 : Math.sin(elapsed * 0.3) * 0.12;
-      const targetX = pointerActive ? -pointerY * 0.3 : Math.cos(elapsed * 0.25) * 0.06;
+      const { targetX, targetY } = computeTiltTarget(pointerActive, pointerX, pointerY, elapsed);
       photoMesh.rotation.y = dampRotation(photoMesh.rotation.y, targetY, 0.05);
       photoMesh.rotation.x = dampRotation(photoMesh.rotation.x, targetX, 0.05);
       photoMesh.position.y = Math.sin(elapsed * 0.7) * 0.06;
