@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Mahmoud Mohamed</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B0D13">
+<meta name="api-base-url" content="http://localhost:3000">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<main class="admin-login">
+  <div class="admin-login__card">
+    <a href="index.html" class="site-header__logo admin-login__logo">MM<span class="site-header__logo-dot">.</span></a>
+    <h1 class="admin-login__title">Admin</h1>
+    <p class="admin-login__subtitle">Sign in to manage posts and view site activity.</p>
+
+    <form class="admin-form" id="login-form">
+      <div class="admin-form__field">
+        <label class="admin-form__label" for="login-email">Email</label>
+        <input class="admin-form__input" type="email" id="login-email" autocomplete="username" required>
+      </div>
+      <div class="admin-form__field">
+        <label class="admin-form__label" for="login-password">Password</label>
+        <input class="admin-form__input" type="password" id="login-password" autocomplete="current-password" required>
+      </div>
+
+      <p class="admin-form__message admin-form__message--error" id="login-error" hidden>Invalid email or password.</p>
+
+      <button type="submit" class="btn btn--primary btn--large admin-login__submit" id="login-submit">Sign in</button>
+    </form>
+  </div>
+</main>
+
+<script src="js/admin-login.js" type="module"></script>
+</body>
+</html>
