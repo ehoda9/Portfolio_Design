@@ -66,6 +66,11 @@ Introduced incrementally — the **Phase** column is when each row lands.
 | DELETE | `/api/posts/:id` | admin | 4 |
 | POST | `/api/auth/login` | — | 4 |
 | POST | `/api/contact` | public | 5 |
+| POST | `/api/analytics/pageview` | public (rate-limited) | 7 |
+| GET | `/api/admin/posts` | admin | 7 |
+| GET | `/api/admin/posts/:id` | admin | 7 |
+| GET | `/api/admin/contact-messages` | admin | 7 |
+| GET | `/api/admin/analytics/summary` | admin | 7 |
 
 ## Auth approach
 
@@ -107,6 +112,37 @@ another origin read the response, but a direct request (`curl`, a script,
 another server) is never blocked by it. Rate limiting and auth are what
 actually protect the endpoints.
 
+## API security posture
+
+A few deliberate decisions, and the reasoning behind them (researched
+against 2026 web security guidance, not assumed):
+
+- **Bearer JWT in `sessionStorage`, not an httpOnly cookie.** 2026
+  guidance generally favors httpOnly cookies for session tokens — they
+  can't be read by injected JS, closing the most common XSS token-theft
+  path. We didn't move to them because this site's frontend and API are
+  **different origins** (see CORS above): a cross-origin cookie needs
+  `SameSite=None`, which itself weakens CSRF protection back to needing
+  an explicit CSRF-token scheme — real added complexity that isn't
+  clearly justified for a single-admin personal site. Instead:
+  `sessionStorage` (cleared when the tab closes, unlike `localStorage`),
+  a short 2-hour token expiry, strict `DOMPurify` sanitization on all
+  rendered content (the actual XSS surface), and a CSP (below) that
+  blocks unauthorized script sources — several smaller mitigations
+  rather than one architectural change with its own new trade-offs.
+- **CSP + security headers** (`server/src/middleware/security-headers.ts`):
+  `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+  `Referrer-Policy: strict-origin-when-cross-origin`. Hand-written rather
+  than pulling in `helmet` for what's a handful of static header
+  assignments.
+- **`/api/admin/*` is a distinct namespace** from the public resource
+  routes (`/api/posts`, `/api/contact`) — every route under it requires
+  `requireAdmin`, applied once via `adminRouter.use(requireAdmin)` rather
+  than per-route, so a new admin route can't accidentally ship unguarded.
+- **Rate limiting stays layered**: login (10/15min), contact (5/15min),
+  analytics page-views (60/15min), and a general API ceiling (300/15min)
+  underneath all of it.
+
 ## Local development
 
 `docker-compose.yml` brings the API and a Postgres instance up together
@@ -125,6 +161,6 @@ changes along the way.
 - [x] Phase 4 — admin auth + protected write endpoints (`POST`/`PUT`/`DELETE /api/posts`), plus rate limiting (login brute-force protection + a general API ceiling)
 - [x] Phase 5 — contact form → real backend (`POST /api/contact`, persisted to Postgres, CORS configured, spam-limited)
 - [x] Phase 6 — frontend blog pages (`blog.html` list + `blog-post.html` detail, Markdown rendering with XSS sanitization, consume the Phase 3 read API)
-- [ ] Phase 7 — admin UI
+- [x] Phase 7 — admin dashboard (`admin-login.html` + `admin.html`): post management (create/edit/delete, drafts included), contact message inbox, page-view analytics, all behind `/api/admin/*` + `requireAdmin`
 - [x] Phase 8 — full docker-compose (web + api + db) — done early in Phase 2, since the API needed a real Postgres to test migrations against locally anyway
 - [ ] Phase 9 — final docs

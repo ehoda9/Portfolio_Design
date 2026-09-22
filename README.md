@@ -127,14 +127,18 @@ while `script.ts` stays a straightforward DOM-wiring layer.
 index.html                  ← homepage
 blog.html                    ← blog post list
 blog-post.html                ← blog post detail (?slug=... query param)
+admin-login.html                ← admin sign-in
+admin.html                        ← admin dashboard + post editor (?post=new|<id>)
 css/
   styles.css
 src/
   script.ts                  ← index.html entry, wires DOM to lib/
   blog.ts                     ← blog.html entry
   blog-post.ts                  ← blog-post.html entry
+  admin-login.ts                   ← admin-login.html entry
+  admin.ts                           ← admin.html entry
   lib/
-    site-chrome.ts               ← shared header/nav/theme/scroll-progress wiring
+    site-chrome.ts               ← header/nav/theme/scroll-progress, composable pieces
     validate-contact-form.ts
     contact-api.ts
     blog-api.ts
@@ -146,12 +150,17 @@ src/
     scroll-progress.ts
     spotlight.ts
     palette.ts                     ← 3 curated color palettes, persisted in localStorage
+    admin-session.ts                 ← admin JWT storage (sessionStorage)
+    admin-api.ts                      ← admin dashboard API client
+    admin-dashboard.ts                  ← pure helpers (URL mode parsing, stat formatting)
+    analytics.ts                          ← fire-and-forget page-view recording
     nav.ts
     faq.ts
     portfolio-filter.ts
 js/                           ← compiled output (committed), mirrors src/
 tests/                         ← one file per src/ module, plus *-wiring.test.ts
                                   integration tests per entry point
+  setup.ts                          ← test-only localStorage/sessionStorage polyfill
 assets/
   img/
 server/                         ← backend API — see server/README.md
@@ -252,23 +261,34 @@ one in full, rendering its Markdown `content` to sanitized HTML
 (`src/lib/blog-render.ts` — `marked` + `DOMPurify`, both dev-only
 dependencies loaded from a CDN, same pattern as three.js).
 
-**There's no admin UI yet** (that's Phase 7) — until then, create/edit
-posts via the admin API directly:
+Posts are managed from **`admin.html`** — see the Admin dashboard section
+below. `curl`/the admin API still work directly too; see
+[`server/README.md`](./server/README.md#admin-setup) for the login setup
+and `server/src/lib/validate-post.ts` for the exact validation rules.
 
-```bash
-TOKEN=$(curl -s -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"you@example.com","password":"your-password"}' | python3 -c "import json,sys;print(json.load(sys.stdin)['token'])")
+## Admin dashboard
 
-curl -X POST http://localhost:3000/api/posts \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
-  -d '{"slug":"hello-world","title":"Hello, World","excerpt":"First post","content":"# Hi\n\nSome **Markdown** here.","status":"published"}'
-```
+`admin-login.html` → `admin.html`. Everything here calls `/api/admin/*`,
+guarded by `requireAdmin` on the backend and a session check on load
+(no token in `sessionStorage` → redirect to login; an expired/invalid
+token on the dashboard's initial fetch → same redirect, token cleared).
 
-See [`server/README.md`](./server/README.md#admin-setup) for the login
-setup, and `server/src/lib/validate-post.ts` for the exact validation
-rules (slug format, length limits).
+- **Dashboard** (`admin.html`, no query param): total page views, post
+  counts (published/draft), and message count; the full post list
+  (drafts included) with Edit/Delete; every contact-form submission,
+  newest first.
+- **Editor** (`admin.html?post=new` or `admin.html?post=<id>`): the same
+  page, toggled by that query param — create or edit a post (title,
+  slug, excerpt, Markdown content, status), or delete it.
+- **Page views**: `src/lib/analytics.ts` fires a fire-and-forget
+  `POST /api/analytics/pageview` from `script.ts`/`blog.ts`/`blog-post.ts`
+  (not from the admin pages themselves — an admin visit shouldn't count
+  as a site visitor). Failures are silent; analytics never blocks or
+  breaks the page for a real visitor.
+
+See [`ARCHITECTURE.md`](./ARCHITECTURE.md#api-security-posture) for why
+the session token lives in `sessionStorage` behind a bearer header
+rather than an httpOnly cookie — a deliberate call, not an oversight.
 
 ## Contact form integration
 

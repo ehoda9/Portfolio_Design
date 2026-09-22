@@ -4,9 +4,9 @@ Backend for [Mahmoud Mohamed's portfolio](../README.md) — the blog and
 contact form persist here. See [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
 for the overall design, schema, and phased build plan.
 
-**Status:** Phase 5 — the contact form now writes to a real database, and
-the API has CORS configured so a browser-based frontend on a different
-origin can call it.
+**Status:** Phase 7 — full admin dashboard backend: post management
+(including drafts), a contact-message inbox, and page-view analytics,
+all under `/api/admin/*`.
 
 ## Endpoints (so far)
 
@@ -20,6 +20,11 @@ origin can call it.
 | PUT | `/api/posts/:id` | admin |
 | DELETE | `/api/posts/:id` | admin |
 | POST | `/api/contact` | public (rate-limited: 5/15min per IP) |
+| POST | `/api/analytics/pageview` | public (rate-limited: 60/15min per IP) |
+| GET | `/api/admin/posts` | admin — every post regardless of status |
+| GET | `/api/admin/posts/:id` | admin — full post (including content), even a draft |
+| GET | `/api/admin/contact-messages` | admin — every submitted message, newest first |
+| GET | `/api/admin/analytics/summary` | admin — total views, views by path, last 7 days |
 
 ## Admin setup
 
