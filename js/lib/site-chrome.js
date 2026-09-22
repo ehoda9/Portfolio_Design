@@ -1,7 +1,7 @@
 import { closeMobileNav, toggleMobileNav } from './nav.js';
 import { computeScrollProgress, shouldShowScrollTop } from './scroll-progress.js';
 import { applyPalette, getStoredPalette } from './palette.js';
-export function initSiteChrome() {
+export function initThemeToggle() {
     const themeToggle = document.getElementById('theme-toggle');
     const themeThumb = document.getElementById('theme-toggle-thumb');
     const root = document.documentElement;
@@ -10,12 +10,16 @@ export function initSiteChrome() {
         root.setAttribute('data-theme', next);
         themeThumb.textContent = next === 'dark' ? '🌙' : '☀️';
     });
+}
+export function initMobileNav() {
     const menuBtn = document.getElementById('menu-btn');
     const mobileNav = document.getElementById('mobile-nav');
     menuBtn.addEventListener('click', () => toggleMobileNav(mobileNav, menuBtn));
     mobileNav.querySelectorAll('.mobile-nav__link').forEach(link => {
         link.addEventListener('click', () => closeMobileNav(mobileNav, menuBtn));
     });
+}
+export function initPalettePicker() {
     const paletteTrigger = document.getElementById('palette-trigger');
     const paletteMenu = document.getElementById('palette-menu');
     const paletteSwatches = Array.from(document.querySelectorAll('.palette-picker__swatch'));
@@ -48,6 +52,8 @@ export function initSiteChrome() {
             paletteTrigger.setAttribute('aria-expanded', 'false');
         }
     });
+}
+export function initScrollChrome() {
     const header = document.getElementById('site-header');
     const scrollProgressBar = document.getElementById('scroll-progress');
     const scrollTopBtn = document.getElementById('scroll-top');
@@ -63,5 +69,14 @@ export function initSiteChrome() {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     });
+}
+export function initFooterYear() {
     document.getElementById('footer-year').textContent = String(new Date().getFullYear());
+}
+export function initSiteChrome() {
+    initThemeToggle();
+    initMobileNav();
+    initPalettePicker();
+    initScrollChrome();
+    initFooterYear();
 }
