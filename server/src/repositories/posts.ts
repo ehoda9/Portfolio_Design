@@ -100,6 +100,36 @@ export async function getPostById(id: number): Promise<AdminPost | null> {
   return row ? toAdminPost(row) : null;
 }
 
+export interface AdminPostSummary {
+  id: number;
+  slug: string;
+  title: string;
+  status: 'draft' | 'published';
+  publishedAt: string | null;
+  updatedAt: string;
+}
+
+/** Every post regardless of status, newest-updated first — for the admin dashboard list view. No content field — keeps the list light. */
+export async function listAllPosts(): Promise<AdminPostSummary[]> {
+  const { rows } = await getPool().query<{
+    id: number;
+    slug: string;
+    title: string;
+    status: 'draft' | 'published';
+    published_at: string | null;
+    updated_at: string;
+  }>(`SELECT id, slug, title, status, published_at, updated_at FROM posts ORDER BY updated_at DESC`);
+
+  return rows.map(row => ({
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    status: row.status,
+    publishedAt: row.published_at,
+    updatedAt: row.updated_at,
+  }));
+}
+
 export type UpdatePostInput = CreatePostInput;
 
 /**

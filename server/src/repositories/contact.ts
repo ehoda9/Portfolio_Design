@@ -18,3 +18,19 @@ export async function createContactMessage(input: ContactInput): Promise<StoredC
   );
   return { id: rows[0].id, createdAt: rows[0].created_at };
 }
+
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+}
+
+/** All contact messages, newest first — admin use only. */
+export async function listContactMessages(): Promise<ContactMessage[]> {
+  const { rows } = await getPool().query<{ id: number; name: string; email: string; message: string; created_at: string }>(
+    `SELECT id, name, email, message, created_at FROM contact_messages ORDER BY created_at DESC`
+  );
+  return rows.map(row => ({ id: row.id, name: row.name, email: row.email, message: row.message, createdAt: row.created_at }));
+}
