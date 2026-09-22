@@ -3,8 +3,10 @@ import { fetchPostBySlug } from './lib/blog-api.js';
 import { formatPublishedDate } from './lib/format-date.js';
 import { renderMarkdown } from './lib/blog-render.js';
 import { getApiBaseUrl } from './lib/contact-api.js';
+import { recordPageView } from './lib/analytics.js';
 
 initSiteChrome();
+void recordPageView(getApiBaseUrl(), window.location.pathname);
 
 const loadingEl = document.getElementById('blog-post-loading') as HTMLElement;
 const notFoundEl = document.getElementById('blog-post-not-found') as HTMLElement;

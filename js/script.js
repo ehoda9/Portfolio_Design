@@ -6,7 +6,9 @@ import { initHeroScene } from './lib/hero-scene.js';
 import { initAboutScene } from './lib/about-scene.js';
 import { computePointerPercent } from './lib/spotlight.js';
 import { initSiteChrome } from './lib/site-chrome.js';
+import { recordPageView } from './lib/analytics.js';
 initSiteChrome();
+void recordPageView(getApiBaseUrl(), window.location.pathname);
 const navLinks = document.querySelectorAll('.site-header__nav-link');
 const sectionIds = ['services', 'work', 'about', 'skills', 'faq'];
 window.addEventListener('scroll', () => {

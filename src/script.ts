@@ -6,8 +6,10 @@ import { initHeroScene } from './lib/hero-scene.js';
 import { initAboutScene } from './lib/about-scene.js';
 import { computePointerPercent } from './lib/spotlight.js';
 import { initSiteChrome } from './lib/site-chrome.js';
+import { recordPageView } from './lib/analytics.js';
 
 initSiteChrome();
+void recordPageView(getApiBaseUrl(), window.location.pathname);
 
 // Active nav link on scroll — index.html-specific (in-page sections),
 // on top of the shared header/progress-bar behavior initSiteChrome sets up.

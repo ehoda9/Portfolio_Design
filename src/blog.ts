@@ -2,8 +2,10 @@ import { initSiteChrome } from './lib/site-chrome.js';
 import { fetchPublishedPosts } from './lib/blog-api.js';
 import { formatPublishedDate } from './lib/format-date.js';
 import { getApiBaseUrl } from './lib/contact-api.js';
+import { recordPageView } from './lib/analytics.js';
 
 initSiteChrome();
+void recordPageView(getApiBaseUrl(), window.location.pathname);
 
 const loadingEl = document.getElementById('blog-list-loading') as HTMLElement;
 const emptyEl = document.getElementById('blog-list-empty') as HTMLElement;
