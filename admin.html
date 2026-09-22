@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B0D13">
+<meta name="api-base-url" content="http://localhost:3000">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <div class="wrap site-header__inner">
+    <a href="index.html" class="site-header__logo">MM<span class="site-header__logo-dot">.</span> <span class="admin-shell__badge">Admin</span></a>
+
+    <div class="site-header__actions">
+      <div class="palette-picker">
+        <button class="palette-picker__trigger" id="palette-trigger" aria-label="Choose color palette" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <div class="palette-picker__menu" id="palette-menu" hidden>
+          <button class="palette-picker__swatch" data-palette="1" style="--sw-a:#D9B36C;--sw-b:#5B9EE8" aria-label="Blueprint color palette"></button>
+          <button class="palette-picker__swatch" data-palette="2" style="--sw-a:#7FBF6A;--sw-b:#E0A458" aria-label="Terminal color palette"></button>
+          <button class="palette-picker__swatch" data-palette="3" style="--sw-a:#D97D51;--sw-b:#5FA69C" aria-label="Ledger color palette"></button>
+        </div>
+      </div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Switch color theme">
+        <span class="theme-toggle__thumb" id="theme-toggle-thumb">🌙</span>
+      </button>
+      <button class="btn btn--secondary" id="logout-btn">Log out</button>
+    </div>
+  </div>
+</header>
+
+<main class="admin-shell" id="top">
+
+  <!-- Dashboard view: stats + posts + messages -->
+  <section class="wrap admin-shell__view" id="dashboard-view" hidden>
+
+    <div class="admin-stats" id="admin-stats">
+      <div class="admin-stats__card">
+        <span class="admin-stats__label">Total page views</span>
+        <span class="admin-stats__value" id="stat-views">—</span>
+      </div>
+      <div class="admin-stats__card">
+        <span class="admin-stats__label">Posts</span>
+        <span class="admin-stats__value" id="stat-posts">—</span>
+        <span class="admin-stats__sublabel" id="stat-posts-breakdown"></span>
+      </div>
+      <div class="admin-stats__card">
+        <span class="admin-stats__label">Contact messages</span>
+        <span class="admin-stats__value" id="stat-messages">—</span>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section__header">
+        <h2 class="admin-section__title">Posts</h2>
+        <a href="admin.html?post=new" class="btn btn--primary" id="new-post-btn">+ New post</a>
+      </div>
+      <div class="admin-table__wrap">
+        <table class="admin-table" id="posts-table" hidden>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Updated</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="posts-table-body"></tbody>
+        </table>
+        <p class="admin-empty-state" id="posts-loading">Loading posts…</p>
+        <p class="admin-empty-state" id="posts-empty" hidden>No posts yet.</p>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section__header">
+        <h2 class="admin-section__title">Contact messages</h2>
+      </div>
+      <div class="admin-messages" id="messages-list"></div>
+      <p class="admin-empty-state" id="messages-loading">Loading messages…</p>
+      <p class="admin-empty-state" id="messages-empty" hidden>No messages yet.</p>
+    </div>
+  </section>
+
+  <!-- Editor view: create/edit a single post -->
+  <section class="wrap admin-shell__view" id="editor-view" hidden>
+    <div class="admin-section__header">
+      <h2 class="admin-section__title" id="editor-title">New post</h2>
+      <a href="admin.html" class="admin-editor__back">← Back to dashboard</a>
+    </div>
+
+    <form class="admin-form admin-editor" id="post-form">
+      <div class="admin-form__row">
+        <div class="admin-form__field">
+          <label class="admin-form__label" for="post-title">Title</label>
+          <input class="admin-form__input" type="text" id="post-title" required>
+        </div>
+        <div class="admin-form__field">
+          <label class="admin-form__label" for="post-slug">Slug</label>
+          <input class="admin-form__input" type="text" id="post-slug" placeholder="my-post-title" required>
+        </div>
+      </div>
+
+      <div class="admin-form__field">
+        <label class="admin-form__label" for="post-excerpt">Excerpt</label>
+        <textarea class="admin-form__input admin-form__input--small" id="post-excerpt" rows="2" required></textarea>
+      </div>
+
+      <div class="admin-form__field">
+        <label class="admin-form__label" for="post-content">Content (Markdown)</label>
+        <textarea class="admin-form__input admin-form__input--large" id="post-content" rows="16" required></textarea>
+      </div>
+
+      <div class="admin-form__row">
+        <div class="admin-form__field">
+          <label class="admin-form__label" for="post-status">Status</label>
+          <select class="admin-form__input" id="post-status">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="admin-form__message admin-form__message--error" id="editor-error" hidden></p>
+      <p class="admin-form__message admin-form__message--success" id="editor-success" hidden>Saved.</p>
+
+      <div class="admin-editor__actions">
+        <button type="submit" class="btn btn--primary btn--large" id="editor-save-btn">Save post</button>
+        <button type="button" class="btn btn--secondary" id="editor-delete-btn" hidden>Delete post</button>
+      </div>
+    </form>
+  </section>
+
+  <p class="admin-empty-state" id="auth-checking">Checking session…</p>
+</main>
+
+<div class="admin-modal" id="confirm-modal" hidden>
+  <div class="admin-modal__card">
+    <p class="admin-modal__message" id="confirm-message">Are you sure?</p>
+    <div class="admin-modal__actions">
+      <button class="btn btn--secondary" id="confirm-cancel">Cancel</button>
+      <button class="btn btn--primary admin-modal__confirm-btn" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js" type="module"></script>
+</body>
+</html>
