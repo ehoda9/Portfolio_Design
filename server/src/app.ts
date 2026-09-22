@@ -4,8 +4,11 @@ import { healthRouter } from './routes/health.js';
 import { postsRouter } from './routes/posts.js';
 import { authRouter } from './routes/auth.js';
 import { contactRouter } from './routes/contact.js';
-import { apiLimiter, contactLimiter, loginLimiter } from './middleware/rate-limiters.js';
+import { analyticsRouter } from './routes/analytics.js';
+import { adminRouter } from './routes/admin.js';
+import { apiLimiter, analyticsLimiter, contactLimiter, loginLimiter } from './middleware/rate-limiters.js';
 import { getAllowedOrigins } from './lib/cors-config.js';
+import { securityHeaders } from './middleware/security-headers.js';
 
 /**
  * Builds the Express app without starting a listener, so tests (and
@@ -15,6 +18,7 @@ import { getAllowedOrigins } from './lib/cors-config.js';
 export function createApp(): Express {
   const app = express();
 
+  app.use(securityHeaders);
   app.use(cors({ origin: getAllowedOrigins() }));
   app.use(express.json());
 
@@ -27,6 +31,8 @@ export function createApp(): Express {
   app.use('/api/auth/login', loginLimiter);
   app.use('/api/auth', authRouter);
   app.use('/api/contact', contactLimiter, contactRouter);
+  app.use('/api/analytics', analyticsLimiter, analyticsRouter);
+  app.use('/api/admin', adminRouter);
 
   // Centralised error handler — route handlers call next(err) on failure
   // (e.g. a DB error) instead of leaking stack traces to the client.
