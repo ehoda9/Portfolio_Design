@@ -44,3 +44,16 @@ export const contactLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many messages sent. Please try again later.' },
 });
+
+/**
+ * A generous but real ceiling on page-view recording — a real visitor
+ * loads a handful of pages, not hundreds. Mainly guards against a script
+ * hammering the endpoint to inflate view counts.
+ */
+export const analyticsLimiter = rateLimit({
+  windowMs: FIFTEEN_MINUTES,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests.' },
+});
